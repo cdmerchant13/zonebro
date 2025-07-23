@@ -62,19 +62,19 @@ ZoneBro is a sleek, browser-based time zone comparison tool built to help remote
 No installation required. You can:
 
 Deploy to:
-	•	GitHub Pages
-	•	Cloudflare Pages
-	•	Netlify
-	•	Your own static web host
+- GitHub Pages
+- Cloudflare Pages
+- Netlify
+- Your own static web host
 
 ⸻
 
 ✨ Roadmap
-	•	Add a third timezone option
-	•	CSV export of overlapping hours
-	•	iCal integration
-	•	Dark mode toggle (with ☀️/🌙 detection)
-	•	Show current UTC offset delta
+- Add a third timezone option
+- CSV export of overlapping hours
+- iCal integration
+- Dark mode toggle (with ☀️/🌙 detection)
+- Show current UTC offset delta
 
 ⸻
 
