@@ -158,10 +158,25 @@
         let isProgrammaticUpdate = false;
 
         const timezoneData = [
+            // Americas
             { city: 'New York', iana: 'America/New_York' }, { city: 'Chicago', iana: 'America/Chicago' },
-            { city: 'Los Angeles', iana: 'America/Los_Angeles' }, { city: 'London', iana: 'Europe/London' },
-            { city: 'Paris', iana: 'Europe/Paris' }, { city: 'Tokyo', iana: 'Asia/Tokyo' },
-            { city: 'Sydney', iana: 'Australia/Sydney' }, { city: 'Kolkata', iana: 'Asia/Kolkata' },
+            { city: 'Denver', iana: 'America/Denver' }, { city: 'Phoenix', iana: 'America/Phoenix' },
+            { city: 'Los Angeles', iana: 'America/Los_Angeles' }, { city: 'Anchorage', iana: 'America/Anchorage' },
+            { city: 'Honolulu', iana: 'Pacific/Honolulu' }, { city: 'Toronto', iana: 'America/Toronto' },
+            { city: 'Vancouver', iana: 'America/Vancouver' }, { city: 'Mexico City', iana: 'America/Mexico_City' },
+            { city: 'São Paulo', iana: 'America/Sao_Paulo' },
+            // Europe & Middle East
+            { city: 'London', iana: 'Europe/London' }, { city: 'Paris', iana: 'Europe/Paris' },
+            { city: 'Berlin', iana: 'Europe/Berlin' }, { city: 'Moscow', iana: 'Europe/Moscow' },
+            { city: 'Dubai', iana: 'Asia/Dubai' }, { city: 'Istanbul', iana: 'Europe/Istanbul' },
+            // Asia & Pacific
+            { city: 'Kolkata', iana: 'Asia/Kolkata' }, { city: 'Shanghai', iana: 'Asia/Shanghai' },
+            { city: 'Hong Kong', iana: 'Asia/Hong_Kong' }, { city: 'Singapore', iana: 'Asia/Singapore' },
+            { city: 'Tokyo', iana: 'Asia/Tokyo' }, { city: 'Seoul', iana: 'Asia/Seoul' },
+            { city: 'Sydney', iana: 'Australia/Sydney' }, { city: 'Auckland', iana: 'Pacific/Auckland' },
+            // Africa
+            { city: 'Cairo', iana: 'Africa/Cairo' }, { city: 'Johannesburg', iana: 'Africa/Johannesburg' },
+            // UTC
             { city: 'UTC', iana: 'UTC' }
         ];
 
@@ -239,6 +254,38 @@
         function formatTime(date, use24Hour) { return date.toLocaleTimeString('default', { hour: 'numeric', minute: '2-digit', hour12: !use24Hour }); }
         function formatDate(date) { return date.toLocaleDateString('default', { weekday: 'long', month: 'long', day: 'numeric' }); }
 
+        function updateMeetingSuggestions() {
+            dom.suggestions.innerHTML = '';
+            const z1 = state.zones[0];
+            const z2 = state.zones[1];
+
+            const z1StartUTC = getUTCHoursFromLocal(z1.tz, z1.workStart);
+            const z1EndUTC = getUTCHoursFromLocal(z1.tz, z1.workEnd);
+            const z2StartUTC = getUTCHoursFromLocal(z2.tz, z2.workStart);
+            const z2EndUTC = getUTCHoursFromLocal(z2.tz, z2.workEnd);
+
+            const overlapStartUTC = Math.max(z1StartUTC, z2StartUTC);
+            const overlapEndUTC = Math.min(z1EndUTC, z2EndUTC);
+
+            if (overlapStartUTC < overlapEndUTC) {
+                for (let hourUTC = Math.ceil(overlapStartUTC); hourUTC < overlapEndUTC; hourUTC++) {
+                    const li = document.createElement('li');
+                    const suggestionDate = new Date(Date.UTC(2024, 0, 1, hourUTC, 0));
+                    
+                    const time1 = formatTime(new Date(suggestionDate.toLocaleString('en-US', {timeZone: z1.tz})), state.use24HourFormat);
+                    const time2 = formatTime(new Date(suggestionDate.toLocaleString('en-US', {timeZone: z2.tz})), state.use24HourFormat);
+
+                    li.innerHTML = `✅ ${time1} (Zone 1) / ${time2} (Zone 2)`;
+                    dom.suggestions.appendChild(li);
+                }
+                if (dom.suggestions.children.length === 0) {
+                    dom.suggestions.innerHTML = '<li>❌ No full one-hour meeting slots available.</li>';
+                }
+            } else {
+                dom.suggestions.innerHTML = '<li>❌ No overlapping work hours.</li>';
+            }
+        }
+
         function updateAllVisuals() {
             const now = new Date();
             const todayAtMidnightUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
@@ -246,7 +293,7 @@
             
             state.zones.forEach(zone => updateZone(zone, sliderTime));
             updateOverlapVisuals();
-            // updateMeetingSuggestions(); // This function needs to be defined or restored
+            updateMeetingSuggestions();
         }
 
         function updateZone(zone, date) {
