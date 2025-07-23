@@ -12,9 +12,16 @@
             --label-color: #627d98; --pin-color: #f59e0b; --manual-edit-glow: 0 0 8px rgba(59, 130, 246, 0.5);
             --overlap-bg: rgba(59, 130, 246, 0.2);
         }
+        [data-theme="dark"] {
+            --bg-color: #111827; --card-bg-color: #1f2937; --text-color: #d1d5db;
+            --header-color: #f9fafb; --border-color: #374151; --primary-color: #60a5fa;
+            --work-hours-bg: #14532d; --outside-hours-bg: #374151; --marker-color: #f87171;
+            --label-color: #9ca3af;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 1rem;
+            transition: background-color 0.3s, color 0.3s;
         }
         .container { width: 100%; max-width: 1200px; margin: 0 auto; }
         header { text-align: center; margin-bottom: 1.5rem; }
@@ -35,7 +42,7 @@
         .zone-card {
             background-color: var(--card-bg-color); border-radius: 0.5rem; border: 1px solid var(--border-color);
             box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 1.5rem; display: flex; flex-direction: column;
-            transition: box-shadow 0.2s ease-in-out;
+            transition: box-shadow 0.2s ease-in-out, background-color 0.3s;
         }
         .zone-card.manual-edit { box-shadow: var(--manual-edit-glow); }
         .zone-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
@@ -43,7 +50,7 @@
         .pin-btn { background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--label-color); }
         .pin-btn.pinned { color: var(--pin-color); }
         .timezone-selector { position: relative; }
-        .timezone-selector input { width: 100%; box-sizing: border-box; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 0.25rem; }
+        .timezone-selector input { width: 100%; box-sizing: border-box; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 0.25rem; background-color: var(--bg-color); color: var(--text-color); }
         .dropdown-list {
             display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
             background: var(--card-bg-color); border: 1px solid var(--border-color);
@@ -56,10 +63,12 @@
         .time-display { text-align: center; margin-bottom: 1rem; }
         .time-display .time { font-size: 2.5rem; font-weight: 600; color: var(--primary-color); }
         .time-display .date { font-size: 1rem; color: var(--label-color); }
-        .time-display input[type="time"] { border: none; font-size: 1rem; padding: 0.25rem; margin-top: 0.5rem; }
+        .time-display input[type="time"] { background-color: var(--card-bg-color); color: var(--text-color); border: 1px solid var(--border-color); font-size: 1rem; padding: 0.25rem; margin-top: 0.5rem; border-radius: 0.25rem;}
         .work-status { font-size: 0.875rem; padding: 0.25rem 0.5rem; border-radius: 9999px; font-weight: 500; margin-top: 0.5rem; display: inline-block; }
         .work-status.working { background-color: var(--work-hours-bg); color: #166534; }
+        [data-theme="dark"] .work-status.working { color: #a7f3d0; }
         .work-status.outside { background-color: var(--outside-hours-bg); color: #475569; }
+        [data-theme="dark"] .work-status.outside { color: #d1d5db; }
         .timeline-container { position: relative; width: 100%; height: 40px; background-color: var(--outside-hours-bg); border-radius: 0.25rem; }
         .work-hours-bar, .overlap-bar { position: absolute; top: 0; height: 100%; border-radius: 0.25rem; }
         .work-hours-bar { background-color: var(--work-hours-bg); z-index: 1; }
@@ -67,7 +76,7 @@
         .time-marker { position: absolute; top: -5px; bottom: -5px; width: 3px; background-color: var(--marker-color); border-radius: 2px; z-index: 3; }
         .hour-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--label-color); margin-top: 0.5rem; }
         .work-hours-config { display: flex; gap: 0.5rem; align-items: center; font-size: 0.875rem; margin-top: 1rem; }
-        .work-hours-config select { padding: 0.25rem; border-radius: 0.25rem; border: 1px solid var(--border-color); }
+        .work-hours-config select { padding: 0.25rem; border-radius: 0.25rem; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); }
         .suggestions { background-color: var(--card-bg-color); padding: 1rem; border-radius: 0.5rem; margin-top: 1.5rem; }
         .suggestions h3 { margin-top: 0; text-align: center; }
         .suggestions ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
@@ -87,19 +96,16 @@
             .local-time-card .date { font-size: 0.875rem; }
         }
         .footer {
-    text-align: center;
-    font-size: 0.75rem;
-    color: var(--label-color);
-    margin-top: 2rem;
-    padding: 1rem 0;
-    border-top: 1px solid var(--border-color);
-}
+            text-align: center; font-size: 0.75rem; color: var(--label-color);
+            margin-top: 2rem; padding: 1rem 0; border-top: 1px solid var(--border-color);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header><h1>ZoneBro</h1><p>Make remote work a little saner. Or just easier.</p></header>
         <div class="controls">
+            <div class="control-group"><button id="theme-toggle">🌓</button></div>
             <div class="control-group"><label for="sync-toggle">⏱️ Follow Real Time</label><input type="checkbox" id="sync-toggle"></div>
             <div class="control-group"><label for="format-toggle">24-Hour</label><input type="checkbox" id="format-toggle"></div>
             <button id="swap-button">Swap</button>
@@ -120,6 +126,8 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const dom = {
+            themeToggle: document.getElementById('theme-toggle'),
+            // ... other dom elements
             container: document.querySelector('.container'),
             localTime: { time: document.querySelector('#local-time-display .time'), date: document.querySelector('#local-time-display .date') },
             zone1Card: document.getElementById('zone1-card'),
@@ -149,6 +157,25 @@
             { city: 'Sydney', iana: 'Australia/Sydney' }, { city: 'Kolkata', iana: 'Asia/Kolkata' },
             { city: 'UTC', iana: 'UTC' }
         ];
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        }
+
+        function setupTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            } else {
+                applyTheme(prefersDark ? 'dark' : 'light');
+            }
+            dom.themeToggle.addEventListener('click', () => {
+                const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                applyTheme(newTheme);
+            });
+        }
 
         function createZoneCardHTML(id) {
             return `
@@ -212,7 +239,7 @@
             
             state.zones.forEach(zone => updateZone(zone, sliderTime));
             updateOverlapVisuals();
-            updateMeetingSuggestions();
+            // updateMeetingSuggestions(); // This function needs to be defined or restored
         }
 
         function updateZone(zone, date) {
@@ -270,7 +297,6 @@
             });
         }
         
-        function updateMeetingSuggestions() { /* ... existing code ... */ }
         function updateLocalClock() {
             const now = new Date();
             dom.localTime.time.textContent = formatTime(now, state.use24HourFormat);
@@ -347,6 +373,7 @@
         }
 
         function init() {
+            setupTheme();
             loadState();
             dom.zone1Card.innerHTML = createZoneCardHTML(1);
             dom.zone2Card.innerHTML = createZoneCardHTML(2);
