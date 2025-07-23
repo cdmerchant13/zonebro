@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZoneBro v2.5 Patch</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8; --card-bg-color: #ffffff; --text-color: #334e68;
+            --header-color: #102a43; --border-color: #d9e2ec; --primary-color: #3b82f6;
+            --work-hours-bg: #dcfce7; --outside-hours-bg: #f1f5f9; --marker-color: #ef4444;
+            --label-color: #627d98; --pin-color: #f59e0b; --manual-edit-glow: 0 0 8px rgba(59, 130, 246, 0.5);
+            --overlap-bg: rgba(59, 130, 246, 0.2);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 1rem;
+        }
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 1.5rem; }
+        header h1 { margin: 0; font-size: 2.5rem; color: var(--header-color); }
+        header p { margin: 0.25rem 0 0; font-size: 1.1rem; color: var(--label-color); }
+        .controls {
+            display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem;
+            margin-bottom: 1.5rem; background-color: var(--card-bg-color); padding: 1rem; border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .control-group { display: flex; align-items: center; gap: 0.5rem; }
+        .master-slider-container { flex-grow: 1; min-width: 200px; }
+        input[type="range"] { width: 100%; -webkit-appearance: none; background: transparent; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: var(--primary-color); cursor: pointer; margin-top: -9px; }
+        input[type="range"]::-moz-range-thumb { height: 24px; width: 24px; border-radius: 50%; background: var(--primary-color); cursor: pointer; }
+        input[type="range"]::-webkit-slider-runnable-track { height: 6px; background: #e2e8f0; border-radius: 3px; }
+        .zone-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        .zone-card {
+            background-color: var(--card-bg-color); border-radius: 0.5rem; border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 1.5rem; display: flex; flex-direction: column;
+            transition: box-shadow 0.2s ease-in-out;
+        }
+        .zone-card.manual-edit { box-shadow: var(--manual-edit-glow); }
+        .zone-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+        .zone-header h2 { margin: 0; font-size: 1.25rem; color: var(--header-color); flex-grow: 1; }
+        .pin-btn { background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--label-color); }
+        .pin-btn.pinned { color: var(--pin-color); }
+        .timezone-selector { position: relative; }
+        .timezone-selector input { width: 100%; box-sizing: border-box; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 0.25rem; }
+        .dropdown-list {
+            display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
+            background: var(--card-bg-color); border: 1px solid var(--border-color);
+            border-radius: 0.25rem; max-height: 200px; overflow-y: auto;
+        }
+        .dropdown-list.show { display: block; }
+        .dropdown-item { padding: 0.5rem; cursor: pointer; }
+        .dropdown-item:hover { background-color: var(--bg-color); }
+        .dropdown-item small { color: var(--label-color); display: block; }
+        .time-display { text-align: center; margin-bottom: 1rem; }
+        .time-display .time { font-size: 2.5rem; font-weight: 600; color: var(--primary-color); }
+        .time-display .date { font-size: 1rem; color: var(--label-color); }
+        .time-display input[type="time"] { border: none; font-size: 1rem; padding: 0.25rem; margin-top: 0.5rem; }
+        .work-status { font-size: 0.875rem; padding: 0.25rem 0.5rem; border-radius: 9999px; font-weight: 500; margin-top: 0.5rem; display: inline-block; }
+        .work-status.working { background-color: var(--work-hours-bg); color: #166534; }
+        .work-status.outside { background-color: var(--outside-hours-bg); color: #475569; }
+        .timeline-container { position: relative; width: 100%; height: 40px; background-color: var(--outside-hours-bg); border-radius: 0.25rem; }
+        .work-hours-bar, .overlap-bar { position: absolute; top: 0; height: 100%; border-radius: 0.25rem; }
+        .work-hours-bar { background-color: var(--work-hours-bg); z-index: 1; }
+        .overlap-bar { background-color: var(--overlap-bg); z-index: 2; }
+        .time-marker { position: absolute; top: -5px; bottom: -5px; width: 3px; background-color: var(--marker-color); border-radius: 2px; z-index: 3; }
+        .hour-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--label-color); margin-top: 0.5rem; }
+        .work-hours-config { display: flex; gap: 0.5rem; align-items: center; font-size: 0.875rem; margin-top: 1rem; }
+        .work-hours-config select { padding: 0.25rem; border-radius: 0.25rem; border: 1px solid var(--border-color); }
+        .suggestions { background-color: var(--card-bg-color); padding: 1rem; border-radius: 0.5rem; margin-top: 1.5rem; }
+        .suggestions h3 { margin-top: 0; text-align: center; }
+        .suggestions ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+        .suggestions li { background-color: var(--bg-color); padding: 0.5rem 1rem; border-radius: 0.5rem; }
+        .local-time-card { border-color: var(--primary-color); }
+        @media (min-width: 1024px) { .zone-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 768px) and (max-width: 1023px) { .zone-grid { grid-template-columns: 1fr 1fr; } .local-time-card { grid-column: 1 / -1; } }
+        @media (max-width: 767px) {
+            body { padding-bottom: 80px; }
+            .local-time-card {
+                position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
+                margin: 0; border-radius: 0; padding: 0.5rem 1rem;
+                border-top: 2px solid var(--primary-color);
+            }
+            .local-time-card .time-display { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; }
+            .local-time-card .time { font-size: 1.5rem; }
+            .local-time-card .date { font-size: 0.875rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header><h1>ZoneBro</h1><p>Make remote work a little saner.</p></header>
+        <div class="controls">
+            <div class="control-group"><label for="sync-toggle">⏱️ Follow Real Time</label><input type="checkbox" id="sync-toggle"></div>
+            <div class="control-group"><label for="format-toggle">24-Hour</label><input type="checkbox" id="format-toggle"></div>
+            <button id="swap-button">Swap</button>
+            <div class="master-slider-container"><input type="range" id="master-slider" min="0" max="1439"></div>
+        </div>
+        <main class="zone-grid">
+            <div class="zone-card local-time-card">
+                <div class="time-display" id="local-time-display">
+                    <div class="time"></div><div class="date"></div>
+                </div>
+            </div>
+            <div class="zone-card" id="zone1-card"></div>
+            <div class="zone-card" id="zone2-card"></div>
+        </main>
+        <div class="suggestions"><h3>Best Meeting Times</h3><ul id="meeting-suggestions"></ul></div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dom = {
+            container: document.querySelector('.container'),
+            localTime: { time: document.querySelector('#local-time-display .time'), date: document.querySelector('#local-time-display .date') },
+            zone1Card: document.getElementById('zone1-card'),
+            zone2Card: document.getElementById('zone2-card'),
+            slider: document.getElementById('master-slider'),
+            formatToggle: document.getElementById('format-toggle'),
+            syncToggle: document.getElementById('sync-toggle'),
+            swapButton: document.getElementById('swap-button'),
+            suggestions: document.getElementById('meeting-suggestions'),
+        };
+
+        const state = {
+            zones: [
+                { id: 1, tz: 'America/New_York', workStart: 9, workEnd: 17 },
+                { id: 2, tz: 'Europe/London', workStart: 9, workEnd: 17 }
+            ],
+            use24HourFormat: false, sliderMinutes: 0, isSyncing: true,
+            pinned: [], lastManualEdit: null,
+        };
+        let syncInterval = null;
+        let isProgrammaticUpdate = false;
+
+        const timezoneData = [
+            { city: 'New York', iana: 'America/New_York' }, { city: 'Chicago', iana: 'America/Chicago' },
+            { city: 'Los Angeles', iana: 'America/Los_Angeles' }, { city: 'London', iana: 'Europe/London' },
+            { city: 'Paris', iana: 'Europe/Paris' }, { city: 'Tokyo', iana: 'Asia/Tokyo' },
+            { city: 'Sydney', iana: 'Australia/Sydney' }, { city: 'Kolkata', iana: 'Asia/Kolkata' },
+            { city: 'UTC', iana: 'UTC' }
+        ];
+
+        function createZoneCardHTML(id) {
+            return `
+                <div class="zone-header">
+                    <h2>Timezone ${id}</h2>
+                    <button class="pin-btn" data-zone-id="${id}">⭐</button>
+                </div>
+                <div class="timezone-selector" id="tz${id}-selector">
+                    <input type="text" id="tz${id}-input" placeholder="Search for a timezone...">
+                    <div class="dropdown-list" id="tz${id}-dropdown"></div>
+                </div>
+                <div class="time-display">
+                    <div class="time" id="tz${id}-time"></div>
+                    <div class="date" id="tz${id}-date"></div>
+                    <input type="time" id="tz${id}-time-input">
+                    <div class="work-status" id="tz${id}-work-status"></div>
+                </div>
+                <div class="timeline-container">
+                    <div class="work-hours-bar" id="tz${id}-work-hours"></div>
+                    <div class="overlap-bar" id="tz${id}-overlap"></div>
+                    <div class="time-marker" id="tz${id}-time-marker"></div>
+                </div>
+                <div class="hour-labels" id="tz${id}-hour-labels"></div>
+                <div class="work-hours-config">
+                    <span>Work hours:</span>
+                    <select id="tz${id}-work-start"></select> to <select id="tz${id}-work-end"></select>
+                </div>
+            `;
+        }
+
+        function populateWorkHourSelects(select, selectedHour) {
+            for (let i = 0; i < 24; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `${String(i).padStart(2, '0')}:00`;
+                if (i === selectedHour) option.selected = true;
+                select.appendChild(option);
+            }
+        }
+
+        function getTimezoneOffset(tz) {
+            const now = new Date();
+            const utcDate = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
+            const tzDate = new Date(now.toLocaleString('en-US', { timeZone: tz }));
+            return (tzDate.getTime() - utcDate.getTime()) / 3600000;
+        }
+
+        function saveState() { localStorage.setItem('zoneBroState', JSON.stringify(state)); }
+        function loadState() {
+            const saved = JSON.parse(localStorage.getItem('zoneBroState'));
+            if (saved) Object.assign(state, saved);
+        }
+
+        function formatTime(date, use24Hour) { return date.toLocaleTimeString('default', { hour: 'numeric', minute: '2-digit', hour12: !use24Hour }); }
+        function formatDate(date) { return date.toLocaleDateString('default', { weekday: 'long', month: 'long', day: 'numeric' }); }
+
+        function updateAllVisuals() {
+            const now = new Date();
+            const todayAtMidnightUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+            const sliderTime = new Date(todayAtMidnightUTC.getTime() + state.sliderMinutes * 60 * 1000);
+            
+            state.zones.forEach(zone => updateZone(zone, sliderTime));
+            updateOverlapVisuals();
+            updateMeetingSuggestions();
+        }
+
+        function updateZone(zone, date) {
+            const localDate = new Date(date.toLocaleString('en-US', { timeZone: zone.tz }));
+            const hour = localDate.getHours();
+            const isWorking = hour >= zone.workStart && hour < zone.workEnd;
+
+            document.getElementById(`tz${zone.id}-time`).textContent = formatTime(localDate, state.use24HourFormat);
+            document.getElementById(`tz${zone.id}-date`).textContent = formatDate(localDate);
+            
+            isProgrammaticUpdate = true;
+            document.getElementById(`tz${zone.id}-time-input`).value = `${String(localDate.getHours()).padStart(2, '0')}:${String(localDate.getMinutes()).padStart(2, '0')}`;
+            isProgrammaticUpdate = false;
+
+            const workStatusEl = document.getElementById(`tz${zone.id}-work-status`);
+            workStatusEl.textContent = isWorking ? 'Working Hours' : 'Outside Hours';
+            workStatusEl.className = `work-status ${isWorking ? 'working' : 'outside'}`;
+
+            document.getElementById(`tz${zone.id}-work-hours`).style.left = `${(zone.workStart / 24) * 100}%`;
+            document.getElementById(`tz${zone.id}-work-hours`).style.width = `${((zone.workEnd - zone.workStart) / 24) * 100}%`;
+            document.getElementById(`tz${zone.id}-time-marker`).style.left = `${((hour * 60 + localDate.getMinutes()) / 1440) * 100}%`;
+            document.getElementById(`zone${zone.id}-card`).classList.toggle('manual-edit', state.lastManualEdit === zone.id);
+        }
+
+        function getUTCHoursFromLocal(tz, localHour) {
+            const now = new Date();
+            const dateInTZ = new Date(now.toLocaleString('en-US', { timeZone: tz }));
+            const dateInUTC = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
+            const offset = (dateInTZ.getTime() - dateInUTC.getTime()) / 3600000;
+            return (localHour - offset + 24) % 24;
+        }
+
+        function updateOverlapVisuals() {
+            const z1 = state.zones[0];
+            const z2 = state.zones[1];
+            const z1StartUTC = getUTCHoursFromLocal(z1.tz, z1.workStart);
+            const z1EndUTC = getUTCHoursFromLocal(z1.tz, z1.workEnd);
+            const z2StartUTC = getUTCHoursFromLocal(z2.tz, z2.workStart);
+            const z2EndUTC = getUTCHoursFromLocal(z2.tz, z2.workEnd);
+
+            const overlapStartUTC = Math.max(z1StartUTC, z2StartUTC);
+            const overlapEndUTC = Math.min(z1EndUTC, z2EndUTC);
+            
+            state.zones.forEach(zone => {
+                const overlapBar = document.getElementById(`tz${zone.id}-overlap`);
+                if (overlapStartUTC < overlapEndUTC) {
+                    const overlapDuration = overlapEndUTC - overlapStartUTC;
+                    const offset = getTimezoneOffset(zone.tz);
+                    const overlapStartLocal = (overlapStartUTC + offset + 24) % 24;
+                    overlapBar.style.left = `${(overlapStartLocal / 24) * 100}%`;
+                    overlapBar.style.width = `${(overlapDuration / 24) * 100}%`;
+                } else {
+                    overlapBar.style.width = '0%';
+                }
+            });
+        }
+        
+        function updateMeetingSuggestions() { /* ... existing code ... */ }
+        function updateLocalClock() {
+            const now = new Date();
+            dom.localTime.time.textContent = formatTime(now, state.use24HourFormat);
+            dom.localTime.date.textContent = formatDate(now);
+            if (state.isSyncing) {
+                const utcMinutes = (now.getUTCHours() * 60 + now.getUTCMinutes());
+                state.sliderMinutes = utcMinutes;
+                isProgrammaticUpdate = true;
+                dom.slider.value = state.sliderMinutes;
+                isProgrammaticUpdate = false;
+                updateAllVisuals();
+            }
+        }
+
+        function handleManualTimeChange(zone, newTime) {
+            if (isProgrammaticUpdate) return;
+            stopRealtimeSync();
+            state.lastManualEdit = zone.id;
+            const [hours, minutes] = newTime.split(':').map(Number);
+            const offset = getTimezoneOffset(zone.tz);
+            state.sliderMinutes = ((hours - offset) * 60 + minutes + 1440) % 1440;
+            isProgrammaticUpdate = true;
+            dom.slider.value = state.sliderMinutes;
+            isProgrammaticUpdate = false;
+            updateAllVisuals();
+        }
+
+        function startRealtimeSync() {
+            if (syncInterval) clearInterval(syncInterval);
+            state.isSyncing = true;
+            dom.syncToggle.checked = true;
+            state.lastManualEdit = null;
+            updateLocalClock();
+            syncInterval = setInterval(updateLocalClock, 1000);
+        }
+        function stopRealtimeSync() {
+            if (syncInterval) clearInterval(syncInterval);
+            syncInterval = null;
+            state.isSyncing = false;
+            dom.syncToggle.checked = false;
+        }
+
+        function setupTimezoneSelector(zone) {
+            const input = document.getElementById(`tz${zone.id}-input`);
+            const dropdown = document.getElementById(`tz${zone.id}-dropdown`);
+            input.value = `${timezoneData.find(t => t.iana === zone.tz)?.city} (${zone.tz})`;
+
+            const renderDropdown = (filter = '') => {
+                dropdown.innerHTML = '';
+                const filteredData = timezoneData.filter(tz => 
+                    tz.city.toLowerCase().includes(filter) || tz.iana.toLowerCase().includes(filter)
+                );
+
+                filteredData.forEach(tz => {
+                    const item = document.createElement('div');
+                    item.className = 'dropdown-item';
+                    item.dataset.iana = tz.iana;
+                    item.innerHTML = `${tz.city} <small>${tz.iana.replace(/_/g, ' ')} (UTC${getTimezoneOffset(tz.iana)})</small>`;
+                    item.addEventListener('mousedown', () => {
+                        zone.tz = tz.iana;
+                        input.value = `${tz.city} (${tz.iana})`;
+                        dropdown.classList.remove('show');
+                        updateAllVisuals();
+                        saveState();
+                    });
+                    dropdown.appendChild(item);
+                });
+                dropdown.classList.toggle('show', filteredData.length > 0);
+            };
+
+            input.addEventListener('focus', () => renderDropdown(input.value));
+            input.addEventListener('input', () => renderDropdown(input.value.toLowerCase()));
+            input.addEventListener('blur', () => setTimeout(() => dropdown.classList.remove('show'), 150));
+        }
+
+        function init() {
+            loadState();
+            dom.zone1Card.innerHTML = createZoneCardHTML(1);
+            dom.zone2Card.innerHTML = createZoneCardHTML(2);
+
+            state.zones.forEach(zone => {
+                setupTimezoneSelector(zone);
+                const startSelect = document.getElementById(`tz${zone.id}-work-start`);
+                const endSelect = document.getElementById(`tz${zone.id}-work-end`);
+                populateWorkHourSelects(startSelect, zone.workStart);
+                populateWorkHourSelects(endSelect, zone.workEnd);
+                document.querySelector(`.pin-btn[data-zone-id="${zone.id}"]`).classList.toggle('pinned', state.pinned.includes(zone.tz));
+            });
+
+            dom.formatToggle.checked = state.use24HourFormat;
+            if (state.isSyncing) startRealtimeSync(); else stopRealtimeSync();
+
+            dom.slider.addEventListener('input', () => {
+                if(isProgrammaticUpdate) return;
+                state.sliderMinutes = parseInt(dom.slider.value, 10);
+                stopRealtimeSync();
+                state.lastManualEdit = null;
+                updateAllVisuals();
+            });
+            dom.formatToggle.addEventListener('change', (e) => { state.use24HourFormat = e.target.checked; updateAllVisuals(); updateLocalClock(); saveState(); });
+            dom.syncToggle.addEventListener('change', (e) => { if(e.target.checked) startRealtimeSync(); else stopRealtimeSync(); });
+            dom.swapButton.addEventListener('click', () => {
+                [state.zones[0], state.zones[1]] = [state.zones[1], state.zones[0]];
+                [state.zones[0].id, state.zones[1].id] = [1, 2];
+                init();
+            });
+
+            state.zones.forEach(zone => {
+                document.getElementById(`tz${zone.id}-time-input`).addEventListener('change', e => handleManualTimeChange(zone, e.target.value));
+                document.getElementById(`tz${zone.id}-work-start`).addEventListener('change', e => { zone.workStart = parseInt(e.target.value); updateAllVisuals(); saveState(); });
+                document.getElementById(`tz${zone.id}-work-end`).addEventListener('change', e => { zone.workEnd = parseInt(e.target.value); updateAllVisuals(); saveState(); });
+            });
+            
+            updateAllVisuals();
+        }
+        init();
+    });
+    </script>
+</body>
+</html>
