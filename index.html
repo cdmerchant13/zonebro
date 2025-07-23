@@ -86,11 +86,19 @@
             .local-time-card .time { font-size: 1.5rem; }
             .local-time-card .date { font-size: 0.875rem; }
         }
+        .footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--label-color);
+    margin-top: 2rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--border-color);
+}
     </style>
 </head>
 <body>
     <div class="container">
-        <header><h1>ZoneBro</h1><p>Make remote work a little saner.</p></header>
+        <header><h1>ZoneBro</h1><p>Make remote work a little saner. Or just easier.</p></header>
         <div class="controls">
             <div class="control-group"><label for="sync-toggle">⏱️ Follow Real Time</label><input type="checkbox" id="sync-toggle"></div>
             <div class="control-group"><label for="format-toggle">24-Hour</label><input type="checkbox" id="format-toggle"></div>
@@ -382,4 +390,7 @@
     });
     </script>
 </body>
+<footer class="footer">
+  <p>© 2025 Christopher Merchant II <a href="https://061191.xyz" target="_blank">061191.xyz</a>. Built for timezone sanity. 🌍 Or because I'm terrible at maths.</p>
+</footer>
 </html>
