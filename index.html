@@ -239,10 +239,28 @@
         }
 
         function getTimezoneOffset(tz) {
-            const now = new Date();
-            const utcDate = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
-            const tzDate = new Date(now.toLocaleString('en-US', { timeZone: tz }));
-            return (tzDate.getTime() - utcDate.getTime()) / 3600000;
+            try {
+                const now = new Date();
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: tz,
+                    timeZoneName: 'longOffset',
+                });
+                const dateString = formatter.format(now);
+                const offsetPart = dateString.split('GMT')[1];
+                if (!offsetPart) {
+                    if (tz.toUpperCase() === 'UTC' || tz.toUpperCase() === 'GMT') return 0;
+                    throw new Error('Offset string not found');
+                }
+                const [hours, minutes] = offsetPart.split(':').map(s => parseInt(s, 10));
+                const offset = hours + ((minutes || 0) / 60) * Math.sign(hours || 0);
+                return offset;
+            } catch (e) {
+                console.error(`Failed to get offset for timezone: ${tz} with Intl, falling back.`, e);
+                const now = new Date();
+                const utcDate = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
+                const tzDate = new Date(now.toLocaleString('en-US', { timeZone: tz }));
+                return (tzDate.getTime() - utcDate.getTime()) / 3600000;
+            }
         }
 
         function saveState() { localStorage.setItem('zoneBroState', JSON.stringify(state)); }
@@ -259,10 +277,13 @@
             const z1 = state.zones[0];
             const z2 = state.zones[1];
 
-            const z1StartUTC = getUTCHoursFromLocal(z1.tz, z1.workStart);
-            const z1EndUTC = getUTCHoursFromLocal(z1.tz, z1.workEnd);
-            const z2StartUTC = getUTCHoursFromLocal(z2.tz, z2.workStart);
-            const z2EndUTC = getUTCHoursFromLocal(z2.tz, z2.workEnd);
+            let z1StartUTC = getUTCHoursFromLocal(z1.tz, z1.workStart);
+            let z1EndUTC = getUTCHoursFromLocal(z1.tz, z1.workEnd);
+            let z2StartUTC = getUTCHoursFromLocal(z2.tz, z2.workStart);
+            let z2EndUTC = getUTCHoursFromLocal(z2.tz, z2.workEnd);
+
+            if (z1EndUTC <= z1StartUTC) z1EndUTC += 24;
+            if (z2EndUTC <= z2StartUTC) z2EndUTC += 24;
 
             const overlapStartUTC = Math.max(z1StartUTC, z2StartUTC);
             const overlapEndUTC = Math.min(z1EndUTC, z2EndUTC);
@@ -270,12 +291,12 @@
             if (overlapStartUTC < overlapEndUTC) {
                 for (let hourUTC = Math.ceil(overlapStartUTC); hourUTC < overlapEndUTC; hourUTC++) {
                     const li = document.createElement('li');
-                    const suggestionDate = new Date(Date.UTC(2024, 0, 1, hourUTC, 0));
+                    const suggestionDate = new Date(Date.UTC(2024, 0, 1, hourUTC % 24, 0));
                     
                     const time1 = formatTime(new Date(suggestionDate.toLocaleString('en-US', {timeZone: z1.tz})), state.use24HourFormat);
                     const time2 = formatTime(new Date(suggestionDate.toLocaleString('en-US', {timeZone: z2.tz})), state.use24HourFormat);
 
-                    li.innerHTML = `✅ ${time1} (Zone 1) / ${time2} (Zone 2)`;
+                    li.innerHTML = `✅ ${time1} / ${time2}`;
                     dom.suggestions.appendChild(li);
                 }
                 if (dom.suggestions.children.length === 0) {
@@ -299,7 +320,13 @@
         function updateZone(zone, date) {
             const localDate = new Date(date.toLocaleString('en-US', { timeZone: zone.tz }));
             const hour = localDate.getHours();
-            const isWorking = hour >= zone.workStart && hour < zone.workEnd;
+            
+            let isWorking;
+            if (zone.workStart < zone.workEnd) {
+                isWorking = hour >= zone.workStart && hour < zone.workEnd;
+            } else { 
+                isWorking = hour >= zone.workStart || hour < zone.workEnd;
+            }
 
             document.getElementById(`tz${zone.id}-time`).textContent = formatTime(localDate, state.use24HourFormat);
             document.getElementById(`tz${zone.id}-date`).textContent = formatDate(localDate);
@@ -313,26 +340,27 @@
             workStatusEl.className = `work-status ${isWorking ? 'working' : 'outside'}`;
 
             document.getElementById(`tz${zone.id}-work-hours`).style.left = `${(zone.workStart / 24) * 100}%`;
-            document.getElementById(`tz${zone.id}-work-hours`).style.width = `${((zone.workEnd - zone.workStart) / 24) * 100}%`;
+            document.getElementById(`tz${zone.id}-work-hours`).style.width = `${(((zone.workEnd - zone.workStart + 24) % 24) / 24) * 100}%`;
             document.getElementById(`tz${zone.id}-time-marker`).style.left = `${((hour * 60 + localDate.getMinutes()) / 1440) * 100}%`;
             document.getElementById(`zone${zone.id}-card`).classList.toggle('manual-edit', state.lastManualEdit === zone.id);
         }
 
         function getUTCHoursFromLocal(tz, localHour) {
-            const now = new Date();
-            const dateInTZ = new Date(now.toLocaleString('en-US', { timeZone: tz }));
-            const dateInUTC = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
-            const offset = (dateInTZ.getTime() - dateInUTC.getTime()) / 3600000;
+            const offset = getTimezoneOffset(tz);
             return (localHour - offset + 24) % 24;
         }
 
         function updateOverlapVisuals() {
             const z1 = state.zones[0];
             const z2 = state.zones[1];
-            const z1StartUTC = getUTCHoursFromLocal(z1.tz, z1.workStart);
-            const z1EndUTC = getUTCHoursFromLocal(z1.tz, z1.workEnd);
-            const z2StartUTC = getUTCHoursFromLocal(z2.tz, z2.workStart);
-            const z2EndUTC = getUTCHoursFromLocal(z2.tz, z2.workEnd);
+            
+            let z1StartUTC = getUTCHoursFromLocal(z1.tz, z1.workStart);
+            let z1EndUTC = getUTCHoursFromLocal(z1.tz, z1.workEnd);
+            let z2StartUTC = getUTCHoursFromLocal(z2.tz, z2.workStart);
+            let z2EndUTC = getUTCHoursFromLocal(z2.tz, z2.workEnd);
+
+            if (z1EndUTC < z1StartUTC) z1EndUTC += 24;
+            if (z2EndUTC < z2StartUTC) z2EndUTC += 24;
 
             const overlapStartUTC = Math.max(z1StartUTC, z2StartUTC);
             const overlapEndUTC = Math.min(z1EndUTC, z2EndUTC);
@@ -343,10 +371,12 @@
                     const overlapDuration = overlapEndUTC - overlapStartUTC;
                     const offset = getTimezoneOffset(zone.tz);
                     const overlapStartLocal = (overlapStartUTC + offset + 24) % 24;
+                    
                     overlapBar.style.left = `${(overlapStartLocal / 24) * 100}%`;
                     overlapBar.style.width = `${(overlapDuration / 24) * 100}%`;
+                    overlapBar.style.display = 'block';
                 } else {
-                    overlapBar.style.width = '0%';
+                    overlapBar.style.display = 'none';
                 }
             });
         }
