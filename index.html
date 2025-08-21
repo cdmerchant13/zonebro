@@ -157,7 +157,7 @@
 </head>
 <body>
     <div class="container">
-        <header><h1>ZoneBro v6</h1><p>Enhanced timezone coordination tool with fuzzy search</p></header>
+        <header><h1>ZoneBro</h1><p>Because remote work is hard enough already.</p></header>
         <div class="controls">
             <div class="control-group"><button id="theme-toggle">🌓</button></div>
             <div class="control-group"><label for="sync-toggle">⏱️ Follow Real Time</label><input type="checkbox" id="sync-toggle"></div>
@@ -746,6 +746,9 @@
 
             dom.formatToggle.checked = state.use24HourFormat;
             if (state.isSyncing) startRealtimeSync(); else stopRealtimeSync();
+            
+            // Initialize all visual components immediately
+            updateAllVisuals();
 
             dom.slider.addEventListener('input', () => {
                 if(isProgrammaticUpdate) return;
