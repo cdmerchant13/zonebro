@@ -85,9 +85,6 @@ The search algorithm scores results based on relevance, ensuring the most likely
 
 ## 🔧 Installation
 
-No installation required. Simply open `index.html` in any modern browser.
-
-### Deployment Options
 
 Deploy to:
 - GitHub Pages
