@@ -2,7 +2,7 @@
   {
     "city": "New York",
     "iana": "America/New_York",
-    "aliases": ["NYC", "New York City", "Eastern Time", "ET", "East Coast", "Manhattan", "Brooklyn", "Queens", "The Big Apple"],
+    "aliases": ["NYC", "New York City", "Eastern Time", "ET", "East Coast", "Manhattan", "Brooklyn", "Queens", "The Big Apple", "charlotte", "miami", "jacksonville", "raleigh", "atlanta", "boston", "philadelphia", "pittsburgh", "baltimore", "washington dc", "cleveland", "detroit", "orlando", "tampa", "richmond"],
     "region": "North America",
     "country": "United States",
     "utcOffset": -5
@@ -10,7 +10,7 @@
   {
     "city": "Chicago",
     "iana": "America/Chicago",
-    "aliases": ["Central Time", "CT", "Midwest", "Illinois", "Windy City", "Second City", "Chi-Town", "Dallas", "Houston", "St Louis", "Milwaukee", "Minneapolis", "New Orleans", "San Antonio"],
+    "aliases": ["Central Time", "CT", "Midwest", "Illinois", "Windy City", "Second City", "Chi-Town", "Dallas", "Houston", "St Louis", "Milwaukee", "Minneapolis", "New Orleans", "San Antonio", "austin", "kansas city", "oklahoma city", "memphis", "nashville", "omaha", "des moines", "madison", "baton rouge", "little rock", "tulsa"],
     "region": "North America",
     "country": "United States",
     "utcOffset": -6
@@ -18,7 +18,7 @@
   {
     "city": "Denver",
     "iana": "America/Denver",
-    "aliases": ["Mountain Time", "MT", "Mile High City", "Rocky Mountains", "Colorado", "Phoenix", "Salt Lake City", "Albuquerque", "Boise"],
+    "aliases": ["Mountain Time", "MT", "Mile High City", "Rocky Mountains", "Colorado", "Phoenix", "Salt Lake City", "Albuquerque", "Boise", "colorado springs", "cheyenne", "santa fe", "el paso", "tucson", "spokane", "reno"],
     "region": "North America",
     "country": "United States",
     "utcOffset": -7
@@ -26,7 +26,7 @@
   {
     "city": "Phoenix",
     "iana": "America/Phoenix",
-    "aliases": ["Arizona", "Desert", "Southwestern", "Grand Canyon State"],
+    "aliases": ["Arizona", "Desert", "Southwestern", "Grand Canyon State", "mesa", "scottsdale", "glendale az", "tempe", "tucson", "flagstaff", "yuma"],
     "region": "North America",
     "country": "United States",
     "utcOffset": -7
@@ -34,7 +34,7 @@
   {
     "city": "Los Angeles",
     "iana": "America/Los_Angeles",
-    "aliases": ["LA", "L.A.", "Pacific Time", "PT", "Hollywood", "West Coast", "California", "San Francisco", "San Diego", "Seattle", "Portland", "Silicon Valley", "Bay Area"],
+    "aliases": ["LA", "L.A.", "Pacific Time", "PT", "Hollywood", "West Coast", "California", "San Francisco", "San Diego", "Seattle", "Portland", "Silicon Valley", "Bay Area", "sacramento", "oakland", "san jose", "fresno", "anaheim", "long beach", "pasadena", "santa monica", "san bernardino"],
     "region": "North America",
     "country": "United States",
     "utcOffset": -8
@@ -42,7 +42,7 @@
   {
     "city": "Anchorage",
     "iana": "America/Anchorage",
-    "aliases": ["Alaska", "AK", "Last Frontier"],
+    "aliases": ["Alaska", "AK", "Last Frontier", "fairbanks", "juneau", "kodiak", "sitka"],
     "region": "North America",
     "country": "United States",
     "utcOffset": -9
@@ -50,7 +50,7 @@
   {
     "city": "Honolulu",
     "iana": "Pacific/Honolulu",
-    "aliases": ["Hawaii", "HI", "Aloha State", "Pacific Islands", "Waikiki", "Pearl Harbor"],
+    "aliases": ["Hawaii", "HI", "Aloha State", "Pacific Islands", "Waikiki", "Pearl Harbor", "maui", "hilo", "kona", "kauai", "oahu"],
     "region": "Pacific",
     "country": "United States",
     "utcOffset": -10
@@ -58,7 +58,7 @@
   {
     "city": "Toronto",
     "iana": "America/Toronto",
-    "aliases": ["Ontario", "Canada", "CN Tower", "Toronto Raptors", "Toronto Maple Leafs"],
+    "aliases": ["Ontario", "Canada", "CN Tower", "Toronto Raptors", "Toronto Maple Leafs", "ottawa", "montreal", "hamilton", "mississauga", "calgary", "quebec city"],
     "region": "North America",
     "country": "Canada",
     "utcOffset": -5
@@ -66,7 +66,7 @@
   {
     "city": "Vancouver",
     "iana": "America/Vancouver",
-    "aliases": ["British Columbia", "BC", "Canada", "Vancouver Canucks", "Vancouver Canadians"],
+    "aliases": ["British Columbia", "BC", "Canada", "Vancouver Canucks", "Vancouver Canadians", "victoria", "surrey", "burnaby", "kelowna"],
     "region": "North America",
     "country": "Canada",
     "utcOffset": -8
@@ -74,7 +74,7 @@
   {
     "city": "Mexico City",
     "iana": "America/Mexico_City",
-    "aliases": ["Mexico", "MX", "Ciudad de México", "CDMX", "Aztec", "Mayan", "Central Mexico"],
+    "aliases": ["Mexico", "MX", "Ciudad de México", "CDMX", "Aztec", "Mayan", "Central Mexico", "guadalajara", "monterrey", "cancun", "tijuana", "puebla", "leon", "merida"],
     "region": "North America",
     "country": "Mexico",
     "utcOffset": -6
@@ -82,7 +82,7 @@
   {
     "city": "São Paulo",
     "iana": "America/Sao_Paulo",
-    "aliases": ["Brazil", "BR", "South America", "Brazilians", "Carioca", "Paulista"],
+    "aliases": ["Brazil", "BR", "South America", "Brazilians", "Carioca", "Paulista", "rio de janeiro", "brasilia", "salvador", "belo horizonte", "recife", "curitiba", "fortaleza"],
     "region": "South America",
     "country": "Brazil",
     "utcOffset": -3
@@ -90,7 +90,7 @@
   {
     "city": "London",
     "iana": "Europe/London",
-    "aliases": ["UK", "United Kingdom", "England", "Britain", "Great Britain", "British", "GMT", "Greenwich", "Big Ben", "Tower of London", "Westminster"],
+    "aliases": ["UK", "United Kingdom", "England", "Britain", "Great Britain", "British", "GMT", "Greenwich", "Big Ben", "Tower of London", "Westminster", "manchester", "liverpool", "birmingham", "edinburgh", "glasgow", "bristol", "leeds", "cardiff", "belfast", "oxford", "cambridge"],
     "region": "Europe",
     "country": "United Kingdom",
     "utcOffset": 0
@@ -98,7 +98,7 @@
   {
     "city": "Paris",
     "iana": "Europe/Paris",
-    "aliases": ["France", "FR", "French", "Eiffel Tower", "Louvre", "Notre Dame", "Champs-Élysées", "French Riviera"],
+    "aliases": ["France", "FR", "French", "Eiffel Tower", "Louvre", "Notre Dame", "Champs-Élysées", "French Riviera", "lyon", "marseille", "nice", "toulouse", "bordeaux", "lille", "strasbourg", "montpellier"],
     "region": "Europe",
     "country": "France",
     "utcOffset": 1
@@ -106,7 +106,7 @@
   {
     "city": "Berlin",
     "iana": "Europe/Berlin",
-    "aliases": ["Germany", "DE", "Deutschland", "German", "Brandenburg Gate", "Berlin Wall", "Oktoberfest"],
+    "aliases": ["Germany", "DE", "Deutschland", "German", "Brandenburg Gate", "Berlin Wall", "Oktoberfest", "munich", "frankfurt", "hamburg", "cologne", "dusseldorf", "stuttgart", "leipzig"],
     "region": "Europe",
     "country": "Germany",
     "utcOffset": 1
@@ -114,7 +114,7 @@
   {
     "city": "Moscow",
     "iana": "Europe/Moscow",
-    "aliases": ["Russia", "RU", "Russian", "Kremlin", "Red Square", "Sputnik", "Soviet"],
+    "aliases": ["Russia", "RU", "Russian", "Kremlin", "Red Square", "Sputnik", "Soviet", "saint petersburg", "kazan", "sochi", "novosibirsk", "yekaterinburg", "vladivostok"],
     "region": "Europe",
     "country": "Russia",
     "utcOffset": 3
@@ -122,7 +122,7 @@
   {
     "city": "Dubai",
     "iana": "Asia/Dubai",
-    "aliases": ["UAE", "United Arab Emirates", "Arab", "Middle East", "Persian Gulf", "Burj Khalifa", "Desert", "Sheikh"],
+    "aliases": ["UAE", "United Arab Emirates", "Arab", "Middle East", "Persian Gulf", "Burj Khalifa", "Desert", "Sheikh", "abu dhabi", "sharjah", "ajman", "fujairah", "ras al khaimah"],
     "region": "Middle East",
     "country": "United Arab Emirates",
     "utcOffset": 4
@@ -130,7 +130,7 @@
   {
     "city": "Istanbul",
     "iana": "Europe/Istanbul",
-    "aliases": ["Turkey", "TR", "Turkish", "Constantinople", "Bosphorus", "Ottoman"],
+    "aliases": ["Turkey", "TR", "Turkish", "Constantinople", "Bosphorus", "Ottoman", "ankara", "izmir", "antalya", "bursa", "konya"],
     "region": "Europe",
     "country": "Turkey",
     "utcOffset": 3
@@ -138,7 +138,7 @@
   {
     "city": "Kolkata",
     "iana": "Asia/Kolkata",
-    "aliases": ["India", "IN", "Indian", "Bombay", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Kerala", "Bengaluru"],
+    "aliases": ["India", "IN", "Indian", "Bombay", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Kerala", "Bengaluru", "pune", "kolkata", "ahmedabad", "jaipur", "lucknow", "patna", "kochi"],
     "region": "Asia",
     "country": "India",
     "utcOffset": 5.5
@@ -146,7 +146,7 @@
   {
     "city": "Shanghai",
     "iana": "Asia/Shanghai",
-    "aliases": ["China", "CN", "Chinese", "Beijing", "Hong Kong", "Macau", "Oriental", "Middle Kingdom"],
+    "aliases": ["China", "CN", "Chinese", "Beijing", "Hong Kong", "Macau", "Oriental", "Middle Kingdom", "shenzhen", "guangzhou", "chengdu", "wuhan", "nanjing", "tianjin", "xi’an", "hangzhou"],
     "region": "Asia",
     "country": "China",
     "utcOffset": 8
@@ -154,7 +154,7 @@
   {
     "city": "Hong Kong",
     "iana": "Asia/Hong_Kong",
-    "aliases": ["HK", "China", "CN", "Special Administrative Region", "Victoria Harbour", "Dim Sum"],
+    "aliases": ["HK", "China", "CN", "Special Administrative Region", "Victoria Harbour", "Dim Sum", "kowloon", "new territories", "macau", "shenzhen"],
     "region": "Asia",
     "country": "China",
     "utcOffset": 8
@@ -162,7 +162,7 @@
   {
     "city": "Singapore",
     "iana": "Asia/Singapore",
-    "aliases": ["SG", "Republic of Singapore", "Lion City", "Garden City", "Southeast Asia", "Marina Bay"],
+    "aliases": ["SG", "Republic of Singapore", "Lion City", "Garden City", "Southeast Asia", "Marina Bay", "sentosa", "orchard", "changi"],
     "region": "Asia",
     "country": "Singapore",
     "utcOffset": 8
@@ -170,7 +170,7 @@
   {
     "city": "Tokyo",
     "iana": "Asia/Tokyo",
-    "aliases": ["Japan", "JP", "Japanese", "Nippon", "Land of the Rising Sun", "Osaka", "Kyoto", "Hiroshima", "Anime", "Sushi"],
+    "aliases": ["Japan", "JP", "Japanese", "Nippon", "Land of the Rising Sun", "Osaka", "Kyoto", "Hiroshima", "Anime", "Sushi", "sapporo", "nagoya", "fukuoka", "yokohama", "kobe", "nagasaki"],
     "region": "Asia",
     "country": "Japan",
     "utcOffset": 9
@@ -178,7 +178,7 @@
   {
     "city": "Seoul",
     "iana": "Asia/Seoul",
-    "aliases": ["Korea", "South Korea", "Korean", "Korean Peninsula", "Korea Time", "KST", "Busan", "Incheon", "Daegu"],
+    "aliases": ["Korea", "South Korea", "Korean", "Korean Peninsula", "Korea Time", "KST", "Busan", "Incheon", "Daegu", "gwangju", "ulsan", "daejeon", "jeju"],
     "region": "Asia",
     "country": "South Korea",
     "utcOffset": 9
@@ -186,7 +186,7 @@
   {
     "city": "Sydney",
     "iana": "Australia/Sydney",
-    "aliases": ["Australia", "AU", "Australian", "Opera House", "Harbor Bridge", "Aussie", "Melbourne", "Brisbane", "Perth", "Adelaide"],
+    "aliases": ["Australia", "AU", "Australian", "Opera House", "Harbor Bridge", "Aussie", "Melbourne", "Brisbane", "Perth", "Adelaide", "canberra", "hobart", "gold coast", "darwin", "cairns", "townsville", "sunshine coast"],
     "region": "Oceania",
     "country": "Australia",
     "utcOffset": 10
@@ -194,7 +194,7 @@
   {
     "city": "Auckland",
     "iana": "Pacific/Auckland",
-    "aliases": ["New Zealand", "NZ", "Kiwi", "Hobbiton", "Middle Earth", "Wellington"],
+    "aliases": ["New Zealand", "NZ", "Kiwi", "Hobbiton", "Middle Earth", "Wellington", "christchurch", "queenstown", "dunedin", "hamilton", "rotorua"],
     "region": "Oceania",
     "country": "New Zealand",
     "utcOffset": 12
@@ -202,7 +202,7 @@
   {
     "city": "Cairo",
     "iana": "Africa/Cairo",
-    "aliases": ["Egypt", "EG", "Egyptian", "Pyramids", "Nile", "Pharaoh", "Sphinx", "African"],
+    "aliases": ["Egypt", "EG", "Egyptian", "Pyramids", "Nile", "Pharaoh", "Sphinx", "African", "alexandria", "giza", "luxor", "aswan", "sharm el sheikh"],
     "region": "Africa",
     "country": "Egypt",
     "utcOffset": 2
@@ -210,7 +210,7 @@
   {
     "city": "Johannesburg",
     "iana": "Africa/Johannesburg",
-    "aliases": ["South Africa", "ZA", "African", "Soweto", "Nelson Mandela", "Diamond Mine", "Cape Town", "Durban"],
+    "aliases": ["South Africa", "ZA", "African", "Soweto", "Nelson Mandela", "Diamond Mine", "Cape Town", "Durban", "pretoria", "bloemfontein", "port elizabeth"],
     "region": "Africa",
     "country": "South Africa",
     "utcOffset": 2
