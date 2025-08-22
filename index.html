@@ -9,7 +9,7 @@
             --bg-color: #f0f4f8; --card-bg-color: #ffffff; --text-color: #334e68;
             --header-color: #102a43; --border-color: #d9e2ec; --primary-color: #3b82f6;
             --work-hours-bg: #dcfce7; --outside-hours-bg: #f1f5f9; --marker-color: #ef4444;
-            --label-color: #627d98; --pin-color: #f59e0b; --manual-edit-glow: 0 0 8px rgba(59, 130, 246, 0.5);
+            --label-color: #627d98; --manual-edit-glow: 0 0 8px rgba(59, 130, 246, 0.5);
             --overlap-bg: rgba(59, 130, 246, 0.2);
         }
         [data-theme="dark"] {
@@ -47,8 +47,6 @@
         .zone-card.manual-edit { box-shadow: var(--manual-edit-glow); }
         .zone-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
         .zone-header h2 { margin: 0; font-size: 1.25rem; color: var(--header-color); flex-grow: 1; }
-        .pin-btn { background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--label-color); }
-        .pin-btn.pinned { color: var(--pin-color); }
         .timezone-selector { position: relative; }
         .timezone-selector input { width: 100%; box-sizing: border-box; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 0.25rem; background-color: var(--bg-color); color: var(--text-color); }
         .dropdown-list {
@@ -215,7 +213,6 @@ defer
             use24HourFormat: false, 
             sliderMinutes: 0, 
             isSyncing: true,
-            pinned: [], 
             lastManualEdit: null
         };
         let syncInterval = null;
@@ -745,7 +742,6 @@ defer
                 const endSelect = document.getElementById(`tz${zone.id}-work-end`);
                 populateWorkHourSelects(startSelect, zone.workStart);
                 populateWorkHourSelects(endSelect, zone.workEnd);
-                document.querySelector(`.pin-btn[data-zone-id="${zone.id}"]`).classList.toggle('pinned', state.pinned.includes(zone.tz));
             });
 
             dom.formatToggle.checked = state.use24HourFormat;
