@@ -6,150 +6,892 @@
     <title>ZoneMatch</title>
     <style>
         :root {
-            --bg-color: #f0f4f8; --card-bg-color: #ffffff; --text-color: #334e68;
-            --header-color: #102a43; --border-color: #d9e2ec; --primary-color: #3b82f6;
-            --work-hours-bg: #dcfce7; --outside-hours-bg: #f1f5f9; --marker-color: #ef4444;
-            --label-color: #627d98; --manual-edit-glow: 0 0 8px rgba(59, 130, 246, 0.5);
+            /* Base colors */
+            --bg-color: #f8fafc;
+            --card-bg-color: #ffffff;
+            --text-color: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            
+            /* Status colors */
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+            
+            /* Interactive colors */
+            --hover-bg: #f1f5f9;
+            --active-bg: #e2e8f0;
+            --focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            --font-size-5xl: 3rem;
+            
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            
+            --line-height-tight: 1.25;
+            --line-height-normal: 1.5;
+            --line-height-relaxed: 1.75;
+            
+            /* Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            --spacing-3xl: 4rem;
+            
+            /* Legacy variables */
+            --header-color: #1e293b;
+            --work-hours-bg: #dcfce7;
+            --outside-hours-bg: #f1f5f9;
+            --marker-color: #ef4444;
+            --manual-edit-glow: 0 0 8px rgba(59, 130, 246, 0.5);
             --overlap-bg: rgba(59, 130, 246, 0.2);
         }
+        
         [data-theme="dark"] {
-            --bg-color: #111827; --card-bg-color: #1f2937; --text-color: #d1d5db;
-            --header-color: #f9fafb; --border-color: #374151; --primary-color: #60a5fa;
-            --work-hours-bg: #14532d; --outside-hours-bg: #374151; --marker-color: #f87171;
-            --label-color: #9ca3af;
+            --bg-color: #0f172a;
+            --card-bg-color: #1e293b;
+            --text-color: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #374151;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            
+            --work-hours-bg: #14532d;
+            --outside-hours-bg: #374151;
+            --marker-color: #f87171;
+            --header-color: #f1f5f9;
         }
+        
+        * {
+            transition: background-color 0.2s ease, border-color 0.2s ease, 
+                        color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 1rem;
+            font-family: var(--font-family);
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            margin: 0; 
+            padding: var(--spacing-md);
             transition: background-color 0.3s, color 0.3s;
+            line-height: var(--line-height-normal);
         }
         .container { width: 100%; max-width: 1200px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 1.5rem; }
-        header h1 { margin: 0; font-size: 2.5rem; color: var(--header-color); }
-        header p { margin: 0.25rem 0 0; font-size: 1.1rem; color: var(--label-color); }
-        .controls {
-            display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem;
-            margin-bottom: 1.5rem; background-color: var(--card-bg-color); padding: 1rem; border-radius: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        header { text-align: center; margin-bottom: var(--spacing-xl); }
+        header h1 { 
+            margin: 0; 
+            font-size: var(--font-size-4xl); 
+            font-weight: var(--font-weight-bold);
+            color: var(--header-color); 
+            line-height: var(--line-height-tight);
         }
-        .control-group { display: flex; align-items: center; gap: 0.5rem; }
+        header p { 
+            margin: var(--spacing-sm) 0 0; 
+            font-size: var(--font-size-lg); 
+            color: var(--text-secondary);
+            font-weight: var(--font-weight-normal);
+        }
+        .controls-section {
+            background: var(--card-bg-color);
+            border-radius: 12px;
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .controls-section-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-color);
+            margin: 0 0 var(--spacing-md) 0;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+        
+        .control-card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: var(--spacing-md);
+            transition: all 0.2s ease;
+        }
+        
+        .control-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .control-label {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-secondary);
+            margin: 0 0 var(--spacing-xs) 0;
+            display: block;
+        }
+        
+        .control-description {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            margin: 0;
+            opacity: 0.8;
+        }
+        
+        .controls {
+            display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl); background-color: var(--card-bg-color); padding: var(--spacing-md); 
+            border-radius: 12px; box-shadow: var(--shadow-md);
+        }
+        .control-group { display: flex; align-items: center; gap: var(--spacing-sm); }
         .master-slider-container { flex-grow: 1; min-width: 200px; }
-        input[type="range"] { width: 100%; -webkit-appearance: none; background: transparent; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: var(--primary-color); cursor: pointer; margin-top: -9px; }
-        input[type="range"]::-moz-range-thumb { height: 24px; width: 24px; border-radius: 50%; background: var(--primary-color); cursor: pointer; }
-        input[type="range"]::-webkit-slider-runnable-track { height: 6px; background: #e2e8f0; border-radius: 3px; }
-        .zone-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        input[type="range"] {
+            width: 100%; 
+            -webkit-appearance: none; 
+            background: transparent;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+            margin-top: -8px;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:active {
+            transform: scale(1.2);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+            border: none;
+        }
+        
+        input[type="range"]::-moz-range-thumb:active {
+            transform: scale(1.2);
+        }
+        
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        .content-section {
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .section-header {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .section-title {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-color);
+            margin: 0 0 var(--spacing-sm) 0;
+        }
+        
+        .section-subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--text-secondary);
+            margin: 0;
+            font-weight: var(--font-weight-normal);
+        }
+        
+        .zone-grid { display: grid; grid-template-columns: 1fr; gap: var(--spacing-lg); }
         .zone-card {
-            background-color: var(--card-bg-color); border-radius: 0.5rem; border: 1px solid var(--border-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 1.5rem; display: flex; flex-direction: column;
-            transition: box-shadow 0.2s ease-in-out, background-color 0.3s;
+            background-color: var(--card-bg-color); border-radius: 12px; border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md); padding: var(--spacing-lg); display: flex; flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+        .zone-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
         .zone-card.manual-edit { box-shadow: var(--manual-edit-glow); }
-        .zone-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-        .zone-header h2 { margin: 0; font-size: 1.25rem; color: var(--header-color); flex-grow: 1; }
+        .zone-header { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            margin-bottom: var(--spacing-md); 
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .zone-title { 
+            margin: 0; 
+            font-size: var(--font-size-xl); 
+            font-weight: var(--font-weight-semibold);
+            color: var(--header-color); 
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        .zone-badge {
+            background: var(--primary-color);
+            color: white;
+            font-size: var(--font-size-xs);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: var(--font-weight-medium);
+        }
         .timezone-selector { position: relative; }
-        .timezone-selector input { width: 100%; box-sizing: border-box; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 0.25rem; background-color: var(--bg-color); color: var(--text-color); }
+        .timezone-selector input { 
+            width: 100%; 
+            box-sizing: border-box; 
+            padding: 12px 16px;
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            background-color: var(--bg-color); 
+            color: var(--text-color);
+            font-size: var(--font-size-base);
+            min-height: 44px;
+        }
+        .timezone-selector input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: var(--focus-ring);
+        }
         .dropdown-list {
             display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
             background: var(--card-bg-color); border: 1px solid var(--border-color);
-            border-radius: 0.25rem; max-height: 200px; overflow-y: auto;
+            border-radius: 8px; max-height: 200px; overflow-y: auto;
+            box-shadow: var(--shadow-lg);
         }
         .dropdown-list.show { display: block; }
-        .dropdown-item { padding: 0.5rem; cursor: pointer; }
-        .dropdown-item:hover { background-color: var(--bg-color); }
-        .dropdown-item small { color: var(--label-color); display: block; }
-        .time-display { text-align: center; margin-bottom: 1rem; }
-        .time-display .time { font-size: 2.5rem; font-weight: 600; color: var(--primary-color); }
-        .time-display .date { font-size: 1rem; color: var(--label-color); }
-        .time-display input[type="time"] { background-color: var(--card-bg-color); color: var(--text-color); border: 1px solid var(--border-color); font-size: 1rem; padding: 0.25rem; margin-top: 0.5rem; border-radius: 0.25rem;}
-        .work-status { font-size: 0.875rem; padding: 0.25rem 0.5rem; border-radius: 9999px; font-weight: 500; margin-top: 0.5rem; display: inline-block; }
-        .work-status.working { background-color: var(--work-hours-bg); color: #166534; }
-        [data-theme="dark"] .work-status.working { color: #a7f3d0; }
-        .work-status.outside { background-color: var(--outside-hours-bg); color: #475569; }
-        [data-theme="dark"] .work-status.outside { color: #d1d5db; }
-        .timeline-container { position: relative; width: 100%; height: 40px; background-color: var(--outside-hours-bg); border-radius: 0.25rem; }
-        .work-hours-bar, .overlap-bar { position: absolute; top: 0; height: 100%; border-radius: 0.25rem; }
-        .work-hours-bar { background-color: var(--work-hours-bg); z-index: 1; }
-        .overlap-bar { background-color: var(--overlap-bg); z-index: 2; }
-        .time-marker { position: absolute; top: -5px; bottom: -5px; width: 3px; background-color: var(--marker-color); border-radius: 2px; z-index: 3; }
-        .hour-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--label-color); margin-top: 0.5rem; }
-        .work-hours-config { display: flex; gap: 0.5rem; align-items: center; font-size: 0.875rem; margin-top: 1rem; }
-        .work-hours-config select { padding: 0.25rem; border-radius: 0.25rem; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); }
-        .local-time-card { border-color: var(--primary-color); }
-        @media (min-width: 1024px) { .zone-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (min-width: 768px) and (max-width: 1023px) { .zone-grid { grid-template-columns: 1fr 1fr; } .local-time-card { grid-column: 1 / -1; } }
+        .dropdown-item { 
+            padding: 12px 16px; 
+            cursor: pointer;
+            min-height: 48px;
+            touch-action: manipulation;
+        }
+        .dropdown-item:hover { background-color: var(--hover-bg); }
+        .dropdown-item small { color: var(--text-secondary); display: block; }
+        .time-display { text-align: center; margin-bottom: var(--spacing-lg); }
+        .time-display .time { 
+            font-size: var(--font-size-3xl); 
+            font-weight: var(--font-weight-semibold); 
+            color: var(--primary-color); 
+            line-height: var(--line-height-tight);
+        }
+        .time-display .date { 
+            font-size: var(--font-size-base); 
+            color: var(--text-secondary); 
+            margin-top: var(--spacing-xs);
+        }
+        .time-display input[type="time"] { 
+            background-color: var(--card-bg-color); 
+            color: var(--text-color); 
+            border: 1px solid var(--border-color); 
+            font-size: var(--font-size-base); 
+            padding: 8px 12px;
+            margin-top: var(--spacing-sm); 
+            border-radius: 6px;
+            min-height: 44px;
+        }
+        .work-status { 
+            font-size: var(--font-size-sm); 
+            padding: var(--spacing-xs) var(--spacing-sm); 
+            border-radius: 9999px; 
+            font-weight: var(--font-weight-medium); 
+            margin-top: var(--spacing-sm); 
+            display: inline-block;
+        }
+        .work-status.working { 
+            background-color: var(--work-hours-bg); 
+            color: #166534; 
+        }
+        [data-theme="dark"] .work-status.working { 
+            color: #a7f3d0; 
+        }
+        .work-status.outside { 
+            background-color: var(--outside-hours-bg); 
+            color: var(--text-secondary); 
+        }
+        .timeline-container { 
+            position: relative; 
+            width: 100%; 
+            height: 60px; 
+            background: var(--bg-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        
+        .timeline-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                var(--outside-hours-bg) 0%,
+                var(--outside-hours-bg) 25%,
+                var(--work-hours-bg) 25%,
+                var(--work-hours-bg) 75%,
+                var(--outside-hours-bg) 75%,
+                var(--outside-hours-bg) 100%
+            );
+            opacity: 0.3;
+        }
+        
+        .work-hours-bar { 
+            position: absolute; 
+            top: 0; 
+            height: 100%; 
+            background: var(--work-hours-bg);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        
+        .overlap-bar { 
+            position: absolute; 
+            top: 0; 
+            height: 100%; 
+            background: var(--overlap-bg);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            z-index: 3;
+            border: 2px solid var(--primary-color);
+        }
+        
+        .time-marker { 
+            position: absolute; 
+            top: 50%; 
+            transform: translateY(-50%);
+            width: 4px; 
+            height: 80%;
+            background: var(--marker-color);
+            border-radius: 2px; 
+            z-index: 4;
+            transition: left 0.3s ease;
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.3);
+        }
+        
+        .time-marker::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 8px solid var(--marker-color);
+        }
+        
+        .hour-labels { 
+            display: flex; 
+            justify-content: space-between; 
+            font-size: var(--font-size-xs); 
+            color: var(--text-secondary); 
+            margin-top: var(--spacing-sm);
+        }
+        
+        .hour-label {
+            text-align: center;
+            min-width: 30px;
+        }
+        
+        .timeline-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--spacing-md);
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .timeline-status {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+        }
+        
+        .status-indicator.outside {
+            background: var(--text-secondary);
+        }
+        .work-hours-config { 
+            display: flex; 
+            gap: var(--spacing-sm); 
+            align-items: center; 
+            font-size: var(--font-size-sm); 
+            margin-top: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+        .work-hours-config select { 
+            padding: 8px 12px;
+            border-radius: 6px; 
+            border: 1px solid var(--border-color); 
+            background-color: var(--bg-color); 
+            color: var(--text-color);
+            font-size: var(--font-size-sm);
+            min-height: 44px;
+            cursor: pointer;
+        }
+        .local-time-card { 
+            border: 2px solid var(--primary-color);
+            position: relative;
+        }
+        
+        .local-time-card .zone-header {
+            border-bottom-color: var(--primary-color);
+        }
+        
+        @media (min-width: 1024px) { 
+            .zone-grid { grid-template-columns: repeat(3, 1fr); } 
+        }
+        @media (min-width: 768px) and (max-width: 1023px) { 
+            .zone-grid { grid-template-columns: 1fr 1fr; } 
+            .local-time-card { grid-column: 1 / -1; } 
+        }
         @media (max-width: 767px) {
-            body { padding-bottom: 80px; }
-            .local-time-card {
-                position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
-                margin: 0; border-radius: 0; padding: 0.5rem 1rem;
-                border-top: 2px solid var(--primary-color);
+            body { 
+                padding: var(--spacing-md);
+                padding-bottom: 120px; 
             }
-            .local-time-card .time-display { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; }
-            .local-time-card .time { font-size: 1.5rem; }
-            .local-time-card .date { font-size: 0.875rem; }
+            
+            .container {
+                max-width: 100%;
+            }
+            
+            header {
+                margin-bottom: var(--spacing-lg);
+            }
+            
+            header h1 {
+                font-size: var(--font-size-3xl);
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: var(--spacing-md);
+                padding: var(--spacing-md);
+                border-radius: 12px;
+            }
+            
+            .control-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .master-slider-container {
+                width: 100%;
+            }
+            
+            .zone-card {
+                padding: var(--spacing-lg);
+                border-radius: 12px;
+            }
+            
+            .time-display .time {
+                font-size: var(--font-size-3xl);
+            }
+            
+            .local-time-card {
+                position: fixed; 
+                bottom: 0; 
+                left: 0; 
+                right: 0; 
+                z-index: 100;
+                margin: 0; 
+                border-radius: 16px 16px 0 0; 
+                padding: var(--spacing-lg);
+                border: none;
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+                background: var(--card-bg-color);
+            }
+            
+            .local-time-card .time-display { 
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
+                margin-bottom: 0; 
+            }
+            
+            .local-time-card .time { 
+                font-size: var(--font-size-2xl); 
+                font-weight: var(--font-weight-semibold);
+            }
+            
+            .local-time-card .date { 
+                font-size: var(--font-size-sm); 
+            }
         }
         .footer {
-            text-align: center; font-size: 0.75rem; color: var(--label-color);
-            margin-top: 2rem; padding: 1rem 0; border-top: 1px solid var(--border-color);
+            text-align: center; 
+            font-size: var(--font-size-xs); 
+            color: var(--text-secondary);
+            margin-top: var(--spacing-2xl); 
+            padding: var(--spacing-lg) 0; 
+            border-top: 1px solid var(--border-color);
         }
+        
+        .error-container {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+        }
+        
+        [data-theme="dark"] .error-container {
+            background: #7f1d1d;
+            border-color: #991b1b;
+        }
+        
+        .error-icon {
+            color: var(--error-color);
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .error-content {
+            flex: 1;
+        }
+        
+        .error-title {
+            font-weight: 600;
+            color: var(--error-color);
+            margin: 0 0 var(--spacing-xs) 0;
+        }
+        
         .error-message {
-            background-color: #fee2e2;
-            color: #991b1b;
-            padding: 0.5rem;
-            border-radius: 0.25rem;
-            margin-top: 0.5rem;
-            font-size: 0.875rem;
-            display: none;
+            color: var(--text-color);
+            margin: 0;
+            font-size: var(--font-size-sm);
         }
-        [data-theme="dark"] .error-message {
-            background-color: #7f1d1d;
-            color: #fecaca;
+        
+        .error-actions {
+            margin-top: var(--spacing-sm);
+            display: flex;
+            gap: var(--spacing-xs);
+            flex-wrap: wrap;
         }
-        .notification {
+        
+        .error-button {
+            background: var(--error-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .error-button:hover {
+            background: #dc2626;
+        }
+        
+        .notification-container {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             z-index: 1000;
-            transform: translateX(200%);
-            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 400px;
         }
+        
+        .notification {
+            padding: 16px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateX(200%);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
         .notification.show {
             transform: translateX(0);
         }
+        
+        .notification.success {
+            background: var(--success-color);
+        }
+        
+        .notification.error {
+            background: var(--error-color);
+        }
+        
+        .notification.warning {
+            background: var(--warning-color);
+        }
+        
+        .notification.info {
+            background: var(--info-color);
+        }
+        
+        .notification-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 1;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         .timezone-offset {
+            background: var(--card-bg-color);
+            border-radius: 16px;
+            padding: var(--spacing-2xl);
             text-align: center;
-            padding: 1rem;
-            background-color: var(--card-bg-color);
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin: 1rem 0;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            margin: var(--spacing-xl) 0;
         }
-        .timezone-offset .label {
-            font-size: 1rem;
-            color: var(--label-color);
-            margin-bottom: 0.5rem;
+        
+        .offset-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-md);
         }
-        .timezone-offset .value {
-            font-size: 3rem;
-            font-weight: bold;
+        
+        .offset-value {
+            font-size: var(--font-size-5xl);
+            font-weight: var(--font-weight-bold);
             color: var(--primary-color);
+            line-height: 1;
+            display: flex;
+            align-items: baseline;
+            gap: var(--spacing-sm);
         }
-        .timezone-offset .description {
-            font-size: 0.875rem;
-            color: var(--label-color);
-            margin-top: 0.5rem;
+        
+        .offset-unit {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-normal);
+            color: var(--text-secondary);
         }
+        
+        .offset-description {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        
+        .offset-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+        }
+        
+        .offset-detail {
+            background: var(--bg-color);
+            border-radius: 8px;
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-color);
+        }
+        
+        .offset-detail-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin: 0 0 var(--spacing-xs) 0;
+        }
+        
+        .offset-detail-value {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-color);
+            margin: 0;
+        }
+        
         .search-info {
-            font-size: 0.75rem;
-            color: var(--label-color);
-            margin-top: 0.25rem;
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
             font-style: italic;
+        }
+        
+        /* Focus styles */
+        *:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+        
+        *:focus:not(:focus-visible) {
+            outline: none;
+        }
+        
+        *:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+        
+        /* Button styles */
+        button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            background: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        button:active::after {
+            width: 300px;
+            height: 300px;
+        }
+        
+        button:hover {
+            background: #2563eb;
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Checkbox styles */
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+        
+        input[type="checkbox"]:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+        
+        /* Loading spinner */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            z-index: 10;
+        }
+        
+        [data-theme="dark"] .loading-overlay {
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            margin-top: 12px;
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        
+        /* Screen reader only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
     </style>
 <script
@@ -160,33 +902,120 @@ defer
 </head>
 <body>
     <div class="container">
-        <header><h1>ZoneMatch</h1><p>Because remote work is hard enough already.</p></header>
-        <div class="controls">
-            <div class="control-group"><button id="theme-toggle">🌓</button></div>
-            <div class="control-group"><label for="sync-toggle">⏱️ Follow Real Time</label><input type="checkbox" id="sync-toggle"></div>
-            <div class="control-group"><label for="format-toggle">24-Hour</label><input type="checkbox" id="format-toggle"></div>
-            <button id="swap-button">Swap</button>
-            <div class="master-slider-container"><input type="range" id="master-slider" min="0" max="1439"></div>
-        </div>
+        <header>
+            <h1>ZoneMatch</h1>
+            <p>Because remote work is hard enough already.</p>
+        </header>
         
-        <main class="zone-grid">
-            <div class="zone-card local-time-card">
-                <div class="time-display" id="local-time-display">
-                    <div class="time"></div><div class="date"></div>
+        <section class="content-section">
+            <div class="controls-section">
+                <h2 class="controls-section-title">
+                    <span>⚙️</span> Controls
+                </h2>
+                <div class="controls-grid">
+                    <div class="control-card">
+                        <label for="theme-toggle" class="control-label">Theme</label>
+                        <p class="control-description">Switch between light and dark mode</p>
+                        <button id="theme-toggle" aria-label="Toggle theme">🌓</button>
+                    </div>
+                    
+                    <div class="control-card">
+                        <label for="sync-toggle" class="control-label">Real Time Sync</label>
+                        <p class="control-description">Follow current time automatically</p>
+                        <div class="control-group">
+                            <input type="checkbox" id="sync-toggle" aria-label="Enable real time sync">
+                            <span>⏱️</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-card">
+                        <label for="format-toggle" class="control-label">Time Format</label>
+                        <p class="control-description">Use 24-hour time format</p>
+                        <div class="control-group">
+                            <input type="checkbox" id="format-toggle" aria-label="Enable 24-hour format">
+                            <span>24-Hour</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-card">
+                        <label class="control-label">Quick Actions</label>
+                        <p class="control-description">Swap timezones</p>
+                        <button id="swap-button" aria-label="Swap timezones">Swap Timezones</button>
+                    </div>
+                </div>
+                
+                <div class="control-card" style="margin-top: var(--spacing-md);">
+                    <label for="master-slider" class="control-label">Time Control</label>
+                    <p class="control-description">Manually adjust time to check availability</p>
+                    <div class="master-slider-container">
+                        <input type="range" id="master-slider" min="0" max="1439" aria-label="Time slider">
+                    </div>
                 </div>
             </div>
-            <div class="zone-card" id="zone1-card"></div>
-            <div class="zone-card" id="zone2-card"></div>
+        </section>
+        
+        <main class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Timezone Comparison</h2>
+                <p class="section-subtitle">Compare time zones and find overlapping work hours</p>
+            </div>
+            
+            <div class="zone-grid">
+                <div class="zone-card local-time-card">
+                    <div class="zone-header">
+                        <h3 class="zone-title">
+                            Local Time
+                            <span class="zone-badge" id="local-status">Active</span>
+                        </h3>
+                    </div>
+                    <div class="time-display" id="local-time-display">
+                        <div class="time"></div>
+                        <div class="date"></div>
+                    </div>
+                </div>
+                
+                <div class="zone-card" id="zone1-card">
+                    <div class="zone-header">
+                        <h3 class="zone-title">
+                            Timezone 1
+                            <span class="zone-badge" id="zone1-status">Active</span>
+                        </h3>
+                    </div>
+                    <!-- Zone content will be inserted here -->
+                </div>
+                
+                <div class="zone-card" id="zone2-card">
+                    <div class="zone-header">
+                        <h3 class="zone-title">
+                            Timezone 2
+                            <span class="zone-badge" id="zone2-status">Active</span>
+                        </h3>
+                    </div>
+                    <!-- Zone content will be inserted here -->
+                </div>
+            </div>
         </main>
         
-        <div class="timezone-offset">
-            <div class="label">Time Difference</div>
-            <div class="value" id="offset-value">+0</div>
-            <div class="description" id="offset-description">Hours between timezones</div>
-        </div>
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Time Difference</h2>
+                <p class="section-subtitle">Hours between selected time zones</p>
+            </div>
+            
+            <div class="timezone-offset">
+                <div class="offset-display">
+                    <div class="offset-value" id="offset-value">+0</div>
+                    <div class="offset-description" id="offset-description">Hours between timezones</div>
+                </div>
+                
+                <div class="offset-details" id="offset-details">
+                    <!-- Details will be inserted here -->
+                </div>
+            </div>
+        </section>
     </div>
 
-    <div class="notification" id="notification">Settings saved!</div>
+    <div class="notification-container" id="notification-container"></div>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -228,7 +1057,14 @@ defer
             })
             .catch(error => {
                 console.error('Error loading timezone data:', error);
-                showNotification('Failed to load timezone data');
+                showEnhancedNotification('Failed to load timezone data', {
+                    type: 'error',
+                    duration: 5000,
+                    title: 'Data Loading Error',
+                    actions: [
+                        { text: 'Retry', onClick: () => window.location.reload() }
+                    ]
+                });
                 // Fallback to minimal timezone data
                 timezoneData = [
                     { city: 'New York', iana: 'America/New_York', aliases: [], region: 'North America', country: 'United States' },
@@ -239,12 +1075,139 @@ defer
                 init();
             });
 
-        function showNotification(message) {
-            dom.notification.textContent = message;
-            dom.notification.classList.add('show');
+        function showNotification(message, type = 'info') {
+            const notificationContainer = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icon = getNotificationIcon(type);
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'notification-close';
+            closeBtn.innerHTML = '×';
+            closeBtn.setAttribute('aria-label', 'Close notification');
+            
+            notification.innerHTML = `
+                <span>${icon}</span>
+                <span>${message}</span>
+            `;
+            notification.appendChild(closeBtn);
+            
+            notificationContainer.appendChild(notification);
+            
+            // Trigger animation
             setTimeout(() => {
-                dom.notification.classList.remove('show');
-            }, 3000);
+                notification.classList.add('show');
+            }, 10);
+            
+            // Auto remove after 5 seconds
+            const timeoutId = setTimeout(() => {
+                removeNotification(notification);
+            }, 5000);
+            
+            // Close button functionality
+            closeBtn.addEventListener('click', () => {
+                clearTimeout(timeoutId);
+                removeNotification(notification);
+            });
+            
+            return notification;
+        }
+        
+        function getNotificationIcon(type) {
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+            return icons[type] || icons.info;
+        }
+        
+        function removeNotification(notification) {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }
+        
+        // Enhanced notification system with different types and actions
+        function showEnhancedNotification(message, options = {}) {
+            const {
+                type = 'info',
+                duration = 5000,
+                actions = [],
+                title = '',
+                persistent = false
+            } = options;
+            
+            const notificationContainer = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icon = getNotificationIcon(type);
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'notification-close';
+            closeBtn.innerHTML = '×';
+            closeBtn.setAttribute('aria-label', 'Close notification');
+            
+            let notificationHTML = `
+                <span>${icon}</span>
+                <div class="notification-content">
+            `;
+            
+            if (title) {
+                notificationHTML += `<div class="notification-title">${title}</div>`;
+            }
+            
+            notificationHTML += `<div class="notification-message">${message}</div>`;
+            
+            if (actions.length > 0) {
+                notificationHTML += '<div class="notification-actions">';
+                actions.forEach(action => {
+                    const actionBtn = document.createElement('button');
+                    actionBtn.className = 'notification-action';
+                    actionBtn.textContent = action.text;
+                    actionBtn.addEventListener('click', () => {
+                        if (action.onClick) action.onClick();
+                        removeNotification(notification);
+                    });
+                    notificationHTML += `<button class="notification-action">${action.text}</button>`;
+                });
+                notificationHTML += '</div>';
+            }
+            
+            notificationHTML += '</div>';
+            notification.innerHTML = notificationHTML;
+            notification.appendChild(closeBtn);
+            
+            notificationContainer.appendChild(notification);
+            
+            // Trigger animation
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // Auto remove after specified duration
+            if (!persistent) {
+                const timeoutId = setTimeout(() => {
+                    removeNotification(notification);
+                }, duration);
+                
+                // Close button functionality
+                closeBtn.addEventListener('click', () => {
+                    clearTimeout(timeoutId);
+                    removeNotification(notification);
+                });
+            } else {
+                // For persistent notifications, only close button works
+                closeBtn.addEventListener('click', () => {
+                    removeNotification(notification);
+                });
+            }
+            
+            return notification;
         }
 
         function applyTheme(theme) {
@@ -263,7 +1226,10 @@ defer
             dom.themeToggle.addEventListener('click', () => {
                 const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
                 applyTheme(newTheme);
-                showNotification(`Theme changed to ${newTheme} mode`);
+                showEnhancedNotification(`Theme changed to ${newTheme} mode`, {
+                    type: 'info',
+                    duration: 3000
+                });
             });
         }
 
@@ -502,30 +1468,108 @@ defer
                 // Calculate the difference (zone2 - zone1)
                 const offsetDifference = offset2 - offset1;
                 
-                // Format the offset for display
-                const formattedOffset = offsetDifference >= 0 ? `+${offsetDifference}` : `${offsetDifference}`;
-                
-                // Update the DOM
-                dom.offsetValue.textContent = formattedOffset;
-                
-                // Update description
-                const zone1Name = timezoneData.find(tz => tz.iana === zone1.tz)?.city || zone1.tz;
-                const zone2Name = timezoneData.find(tz => tz.iana === zone2.tz)?.city || zone2.tz;
-                dom.offsetDescription.textContent = `Hours from ${zone1Name} to ${zone2Name}`;
+                // Update the DOM with enhanced offset display
+                updateOffsetDisplay(zone1, zone2, offsetDifference);
             } catch (error) {
                 console.error('Error calculating timezone offset:', error);
                 dom.offsetValue.textContent = 'Error';
                 dom.offsetDescription.textContent = 'Unable to calculate offset';
+                clearOffsetDetails();
+            }
+        }
+        
+        // Enhanced offset display with detailed information
+        function updateOffsetDisplay(zone1, zone2, offsetDifference) {
+            // Update main offset display
+            const offsetValue = document.getElementById('offset-value');
+            const offsetDescription = document.getElementById('offset-description');
+            
+            offsetValue.textContent = formatOffset(offsetDifference);
+            offsetDescription.textContent = `Hours from ${zone1.city || zone1.tz} to ${zone2.city || zone2.tz}`;
+            
+            // Update detailed offset information
+            updateOffsetDetails(zone1, zone2, offsetDifference);
+        }
+        
+        // Format offset with proper handling of fractional hours
+        function formatOffset(offset) {
+            const sign = offset >= 0 ? '+' : '';
+            const hours = Math.floor(Math.abs(offset));
+            const minutes = Math.round((Math.abs(offset) - hours) * 60);
+            
+            if (minutes === 0) {
+                return `${sign}${hours}`;
+            } else {
+                return `${sign}${hours}:${minutes.toString().padStart(2, '0')}`;
+            }
+        }
+        
+        // Update detailed offset information
+        function updateOffsetDetails(zone1, zone2, offsetDifference) {
+            const detailsContainer = document.getElementById('offset-details');
+            
+            // Clear existing details
+            detailsContainer.innerHTML = '';
+            
+            // Add zone details
+            const zone1Detail = createOffsetDetail('Zone 1', zone1.city || zone1.tz, zone1.tz, zone1.workStart, zone1.workEnd);
+            const zone2Detail = createOffsetDetail('Zone 2', zone2.city || zone2.tz, zone2.tz, zone2.workStart, zone2.workEnd);
+            const differenceDetail = createOffsetDetail('Time Difference', formatOffset(offsetDifference), '', '', '');
+            
+            detailsContainer.appendChild(zone1Detail);
+            detailsContainer.appendChild(zone2Detail);
+            detailsContainer.appendChild(differenceDetail);
+        }
+        
+        // Create individual offset detail card
+        function createOffsetDetail(label, city, timezone, workStart, workEnd) {
+            const detail = document.createElement('div');
+            detail.className = 'offset-detail';
+            
+            const labelEl = document.createElement('div');
+            labelEl.className = 'offset-detail-label';
+            labelEl.textContent = label;
+            
+            const valueEl = document.createElement('div');
+            valueEl.className = 'offset-detail-value';
+            
+            if (workStart !== undefined && workEnd !== undefined) {
+                valueEl.textContent = `${city}\n${workStart}:00 - ${workEnd}:00`;
+            } else {
+                valueEl.textContent = city;
+            }
+            
+            detail.appendChild(labelEl);
+            detail.appendChild(valueEl);
+            
+            return detail;
+        }
+        
+        // Clear offset details
+        function clearOffsetDetails() {
+            const detailsContainer = document.getElementById('offset-details');
+            if (detailsContainer) {
+                detailsContainer.innerHTML = '';
             }
         }
 
         function saveState() { 
             try {
                 localStorage.setItem('zoneBroState', JSON.stringify(state));
-                showNotification('Settings saved successfully!');
+                showEnhancedNotification('Settings saved successfully!', {
+                    type: 'success',
+                    duration: 3000
+                });
             } catch (e) {
                 console.error('Failed to save state:', e);
-                showNotification('Failed to save settings');
+                showEnhancedNotification('Failed to save settings', {
+                    type: 'error',
+                    duration: 5000,
+                    title: 'Save Error',
+                    actions: [
+                        { text: 'Retry', onClick: () => saveState() }
+                    ]
+                });
             }
         }
         
@@ -537,7 +1581,11 @@ defer
                 }
             } catch (e) {
                 console.error('Failed to load state:', e);
-                showNotification('Failed to load saved settings');
+                showEnhancedNotification('Failed to load saved settings', {
+                    type: 'warning',
+                    duration: 5000,
+                    title: 'Load Error'
+                });
             }
         }
 
@@ -718,7 +1766,10 @@ defer
                         dropdown.classList.remove('show');
                         updateAllVisuals();
                         saveState();
-                        showNotification(`Timezone changed to ${tz.city}`);
+                        showEnhancedNotification(`Timezone changed to ${tz.city}`, {
+                    type: 'success',
+                    duration: 3000
+                });
                     });
                     dropdown.appendChild(item);
                 });
@@ -763,16 +1814,25 @@ defer
                 updateAllVisuals(); 
                 updateLocalClock(); 
                 saveState();
-                showNotification(`Time format changed to ${e.target.checked ? '24-hour' : '12-hour'}`);
+                showEnhancedNotification(`Time format changed to ${e.target.checked ? '24-hour' : '12-hour'}`, {
+                    type: 'info',
+                    duration: 3000
+                });
             });
             
             dom.syncToggle.addEventListener('change', (e) => { 
                 if(e.target.checked) {
                     startRealtimeSync();
-                    showNotification('Synced with real time');
+                    showEnhancedNotification('Synced with real time', {
+                        type: 'success',
+                        duration: 3000
+                    });
                 } else {
                     stopRealtimeSync();
-                    showNotification('Manual time control enabled');
+                    showEnhancedNotification('Manual time control enabled', {
+                        type: 'info',
+                        duration: 3000
+                    });
                 }
             });
             
@@ -780,7 +1840,10 @@ defer
                 [state.zones[0], state.zones[1]] = [state.zones[1], state.zones[0]];
                 [state.zones[0].id, state.zones[1].id] = [1, 2];
                 init();
-                showNotification('Timezones swapped');
+                showEnhancedNotification('Timezones swapped', {
+                    type: 'success',
+                    duration: 3000
+                });
             });
 
             state.zones.forEach(zone => {
@@ -797,12 +1860,22 @@ defer
                         updateAllVisuals();
                         saveState();
                         document.getElementById(`tz${zone.id}-error`).style.display = 'none';
-                        showNotification(`Work hours updated for ${timezoneData.find(t => t.iana === zone.tz)?.city}`);
+                        showEnhancedNotification(`Work hours updated for ${timezoneData.find(t => t.iana === zone.tz)?.city}`, {
+                            type: 'success',
+                            duration: 3000
+                        });
                     } catch (error) {
                         document.getElementById(`tz${zone.id}-error`).textContent = error.message;
                         document.getElementById(`tz${zone.id}-error`).style.display = 'block';
                         e.target.value = zone.workStart; // Revert to previous value
-                        showNotification(`Error: ${error.message}`);
+                        showEnhancedNotification(`Error: ${error.message}`, {
+                            type: 'error',
+                            duration: 5000,
+                            title: 'Validation Error',
+                            actions: [
+                                { text: 'Dismiss', onClick: () => {} }
+                            ]
+                        });
                     }
                 });
                 
@@ -816,12 +1889,22 @@ defer
                         updateAllVisuals();
                         saveState();
                         document.getElementById(`tz${zone.id}-error`).style.display = 'none';
-                        showNotification(`Work hours updated for ${timezoneData.find(t => t.iana === zone.tz)?.city}`);
+                        showEnhancedNotification(`Work hours updated for ${timezoneData.find(t => t.iana === zone.tz)?.city}`, {
+                            type: 'success',
+                            duration: 3000
+                        });
                     } catch (error) {
                         document.getElementById(`tz${zone.id}-error`).textContent = error.message;
                         document.getElementById(`tz${zone.id}-error`).style.display = 'block';
                         e.target.value = zone.workEnd; // Revert to previous value
-                        showNotification(`Error: ${error.message}`);
+                        showEnhancedNotification(`Error: ${error.message}`, {
+                            type: 'error',
+                            duration: 5000,
+                            title: 'Validation Error',
+                            actions: [
+                                { text: 'Dismiss', onClick: () => {} }
+                            ]
+                        });
                     }
                 });
             });
