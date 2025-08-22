@@ -15,7 +15,7 @@ ZoneBro is a sleek, browser-based time zone comparison tool built to help remote
   See overlapping work hours highlighted on each zone's timeline for easy scheduling.
 
 - **Real-Time Sync Mode**  
-  Keep time in motion with live updates, or pause and scrub manually with the time slider.
+  Keep time in motion with live updates, or pause and adjust time manually.
 
 - **Manual Time Input**  
   Jump to any time to check availability without affecting the synced clock.

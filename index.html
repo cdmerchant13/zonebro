@@ -23,6 +23,7 @@
             --info-color: #3b82f6;
             
             /* Interactive colors */
+            --primary-color: #3b82f6;
             --hover-bg: #f1f5f9;
             --active-bg: #e2e8f0;
             --focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.1);
@@ -32,6 +33,7 @@
             --font-size-xs: 0.75rem;
             --font-size-sm: 0.875rem;
             --font-size-base: 1rem;
+            --font-size-md: 1.0625rem;
             --font-size-lg: 1.125rem;
             --font-size-xl: 1.25rem;
             --font-size-2xl: 1.5rem;
@@ -44,18 +46,18 @@
             --font-weight-semibold: 600;
             --font-weight-bold: 700;
             
-            --line-height-tight: 1.25;
-            --line-height-normal: 1.5;
-            --line-height-relaxed: 1.75;
+            --line-height-tight: 1.2;
+            --line-height-normal: 1.4;
+            --line-height-relaxed: 1.6;
             
             /* Spacing */
             --spacing-xs: 0.25rem;
             --spacing-sm: 0.5rem;
-            --spacing-md: 1rem;
-            --spacing-lg: 1.5rem;
-            --spacing-xl: 2rem;
-            --spacing-2xl: 3rem;
-            --spacing-3xl: 4rem;
+            --spacing-md: 0.75rem;
+            --spacing-lg: 1.25rem;
+            --spacing-xl: 1.75rem;
+            --spacing-2xl: 2.5rem;
+            --spacing-3xl: 3.5rem;
             
             /* Legacy variables */
             --header-color: #1e293b;
@@ -97,49 +99,99 @@
             line-height: var(--line-height-normal);
         }
         .container { width: 100%; max-width: 1200px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: var(--spacing-xl); }
+        header { 
+            margin-bottom: var(--spacing-md); 
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+        
+        .header-title-section {
+            flex: 1;
+            min-width: 200px;
+        }
+        
         header h1 { 
             margin: 0; 
-            font-size: var(--font-size-4xl); 
+            font-size: var(--font-size-lg); 
             font-weight: var(--font-weight-bold);
             color: var(--header-color); 
             line-height: var(--line-height-tight);
         }
         header p { 
-            margin: var(--spacing-sm) 0 0; 
-            font-size: var(--font-size-lg); 
+            margin: 2px 0 0; 
+            font-size: var(--font-size-xs); 
             color: var(--text-secondary);
             font-weight: var(--font-weight-normal);
         }
+        
+        .local-time-header {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 4px var(--spacing-sm);
+            min-width: 140px;
+            text-align: center;
+        }
+        
+        .local-time-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+        }
+        
+        .local-time-display .time {
+            font-size: var(--font-size-md);
+            font-weight: var(--font-weight-semibold);
+            color: var(--primary-color);
+            line-height: var(--line-height-tight);
+        }
+        
+        .local-time-display .date {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+        }
+        .controls {
+            display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm); background-color: var(--card-bg-color); padding: var(--spacing-sm); 
+            border-radius: 8px; box-shadow: var(--shadow-md);
+        }
+        .control-group { display: flex; align-items: center; gap: var(--spacing-xs); }
         .controls-section {
             background: var(--card-bg-color);
-            border-radius: 12px;
-            padding: var(--spacing-lg);
-            margin-bottom: var(--spacing-xl);
+            border-radius: 8px;
+            padding: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
             box-shadow: var(--shadow-sm);
         }
         
         .controls-section-title {
-            font-size: var(--font-size-lg);
+            font-size: var(--font-size-sm);
             font-weight: var(--font-weight-semibold);
             color: var(--text-color);
-            margin: 0 0 var(--spacing-md) 0;
+            margin: 0 0 var(--spacing-sm) 0;
             display: flex;
             align-items: center;
-            gap: var(--spacing-sm);
+            gap: var(--spacing-xs);
         }
         
         .controls-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--spacing-md);
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--spacing-xs);
         }
         
         .control-card {
             background: var(--bg-color);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: var(--spacing-md);
+            border-radius: 6px;
+            padding: var(--spacing-xs);
             transition: all 0.2s ease;
         }
         
@@ -149,10 +201,10 @@
         }
         
         .control-label {
-            font-size: var(--font-size-sm);
+            font-size: var(--font-size-xs);
             font-weight: var(--font-weight-medium);
             color: var(--text-secondary);
-            margin: 0 0 var(--spacing-xs) 0;
+            margin: 0 0 1px 0;
             display: block;
         }
         
@@ -163,128 +215,75 @@
             opacity: 0.8;
         }
         
-        .controls {
-            display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--spacing-md);
-            margin-bottom: var(--spacing-xl); background-color: var(--card-bg-color); padding: var(--spacing-md); 
-            border-radius: 12px; box-shadow: var(--shadow-md);
-        }
-        .control-group { display: flex; align-items: center; gap: var(--spacing-sm); }
-        .master-slider-container { flex-grow: 1; min-width: 200px; }
-        input[type="range"] {
-            width: 100%; 
-            -webkit-appearance: none; 
-            background: transparent;
-            height: 8px;
-            background: var(--border-color);
-            border-radius: 4px;
-            outline: none;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease;
-            margin-top: -8px;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb:active {
-            transform: scale(1.2);
-        }
-        
-        input[type="range"]::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease;
-            border: none;
-        }
-        
-        input[type="range"]::-moz-range-thumb:active {
-            transform: scale(1.2);
-        }
-        
-        input[type="range"]::-webkit-slider-runnable-track {
-            height: 8px;
-            background: var(--border-color);
-            border-radius: 4px;
-        }
         .content-section {
-            margin-bottom: var(--spacing-2xl);
+            margin-bottom: var(--spacing-lg);
         }
         
         .section-header {
-            margin-bottom: var(--spacing-xl);
+            margin-bottom: var(--spacing-sm);
         }
         
         .section-title {
-            font-size: var(--font-size-2xl);
-            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
             color: var(--text-color);
-            margin: 0 0 var(--spacing-sm) 0;
+            margin: 0 0 var(--spacing-xs) 0;
         }
         
         .section-subtitle {
-            font-size: var(--font-size-lg);
+            font-size: var(--font-size-xs);
             color: var(--text-secondary);
             margin: 0;
             font-weight: var(--font-weight-normal);
         }
         
-        .zone-grid { display: grid; grid-template-columns: 1fr; gap: var(--spacing-lg); }
+        .zone-grid { display: grid; grid-template-columns: 1fr; gap: var(--spacing-xs); }
         .zone-card {
-            background-color: var(--card-bg-color); border-radius: 12px; border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-md); padding: var(--spacing-lg); display: flex; flex-direction: column;
+            background-color: var(--card-bg-color); border-radius: 4px; border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm); padding: 1px; display: flex; flex-direction: column;
             transition: transform 0.2s ease, box-shadow 0.3s ease;
         }
         .zone-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
         .zone-card.manual-edit { box-shadow: var(--manual-edit-glow); }
         .zone-header { 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            margin-bottom: var(--spacing-md); 
-            padding-bottom: var(--spacing-sm);
+            margin-bottom: 0; 
+            padding: 2px 4px;
             border-bottom: 1px solid var(--border-color);
         }
         .zone-title { 
             margin: 0; 
-            font-size: var(--font-size-xl); 
+            font-size: var(--font-size-xs); 
             font-weight: var(--font-weight-semibold);
             color: var(--header-color); 
             display: flex;
             align-items: center;
-            gap: var(--spacing-sm);
+            gap: 2px;
         }
         .zone-badge {
             background: var(--primary-color);
             color: white;
             font-size: var(--font-size-xs);
-            padding: 2px 8px;
-            border-radius: 12px;
+            padding: 1px 6px;
+            border-radius: 10px;
             font-weight: var(--font-weight-medium);
         }
         .timezone-selector { position: relative; }
         .timezone-selector input { 
             width: 100%; 
             box-sizing: border-box; 
-            padding: 12px 16px;
+            padding: 8px 12px;
             border: 1px solid var(--border-color); 
-            border-radius: 8px; 
+            border-radius: 6px; 
             background-color: var(--bg-color); 
             color: var(--text-color);
-            font-size: var(--font-size-base);
-            min-height: 44px;
+            font-size: var(--font-size-sm);
+            min-height: 40px;
         }
         .timezone-selector input:focus {
             outline: none;
@@ -294,46 +293,46 @@
         .dropdown-list {
             display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
             background: var(--card-bg-color); border: 1px solid var(--border-color);
-            border-radius: 8px; max-height: 200px; overflow-y: auto;
+            border-radius: 6px; max-height: 180px; overflow-y: auto;
             box-shadow: var(--shadow-lg);
         }
         .dropdown-list.show { display: block; }
         .dropdown-item { 
-            padding: 12px 16px; 
+            padding: 8px 12px; 
             cursor: pointer;
-            min-height: 48px;
+            min-height: 40px;
             touch-action: manipulation;
         }
         .dropdown-item:hover { background-color: var(--hover-bg); }
         .dropdown-item small { color: var(--text-secondary); display: block; }
-        .time-display { text-align: center; margin-bottom: var(--spacing-lg); }
+        .time-display { text-align: center; margin-bottom: 2px; }
         .time-display .time { 
-            font-size: var(--font-size-3xl); 
+            font-size: var(--font-size-md); 
             font-weight: var(--font-weight-semibold); 
             color: var(--primary-color); 
             line-height: var(--line-height-tight);
         }
         .time-display .date { 
-            font-size: var(--font-size-base); 
+            font-size: var(--font-size-xs); 
             color: var(--text-secondary); 
-            margin-top: var(--spacing-xs);
+            margin-top: 1px;
         }
         .time-display input[type="time"] { 
             background-color: var(--card-bg-color); 
             color: var(--text-color); 
             border: 1px solid var(--border-color); 
-            font-size: var(--font-size-base); 
-            padding: 8px 12px;
-            margin-top: var(--spacing-sm); 
-            border-radius: 6px;
-            min-height: 44px;
+            font-size: var(--font-size-xs); 
+            padding: 3px 6px;
+            margin-top: 1px; 
+            border-radius: 3px;
+            min-height: 32px;
         }
         .work-status { 
-            font-size: var(--font-size-sm); 
-            padding: var(--spacing-xs) var(--spacing-sm); 
+            font-size: var(--font-size-xs); 
+            padding: 1px var(--spacing-xs); 
             border-radius: 9999px; 
             font-weight: var(--font-weight-medium); 
-            margin-top: var(--spacing-sm); 
+            margin-top: 1px; 
             display: inline-block;
         }
         .work-status.working { 
@@ -350,9 +349,9 @@
         .timeline-container { 
             position: relative; 
             width: 100%; 
-            height: 60px; 
+            height: 28px; 
             background: var(--bg-color);
-            border-radius: 8px;
+            border-radius: 4px;
             border: 1px solid var(--border-color);
             overflow: hidden;
         }
@@ -380,7 +379,7 @@
             top: 0; 
             height: 100%; 
             background: var(--work-hours-bg);
-            border-radius: 6px;
+            border-radius: 4px;
             transition: all 0.3s ease;
             z-index: 2;
         }
@@ -390,36 +389,36 @@
             top: 0; 
             height: 100%; 
             background: var(--overlap-bg);
-            border-radius: 6px;
+            border-radius: 4px;
             transition: all 0.3s ease;
             z-index: 3;
-            border: 2px solid var(--primary-color);
+            border: 1px solid var(--primary-color);
         }
         
         .time-marker { 
             position: absolute; 
             top: 50%; 
             transform: translateY(-50%);
-            width: 4px; 
-            height: 80%;
+            width: 3px; 
+            height: 70%;
             background: var(--marker-color);
             border-radius: 2px; 
             z-index: 4;
             transition: left 0.3s ease;
-            box-shadow: 0 0 8px rgba(239, 68, 68, 0.3);
+            box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);
         }
         
         .time-marker::before {
             content: '';
             position: absolute;
-            top: -8px;
+            top: -6px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-bottom: 8px solid var(--marker-color);
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 6px solid var(--marker-color);
         }
         
         .hour-labels { 
@@ -427,20 +426,20 @@
             justify-content: space-between; 
             font-size: var(--font-size-xs); 
             color: var(--text-secondary); 
-            margin-top: var(--spacing-sm);
+            margin-top: 1px;
         }
         
         .hour-label {
             text-align: center;
-            min-width: 30px;
+            min-width: 25px;
         }
         
         .timeline-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: var(--spacing-md);
-            font-size: var(--font-size-sm);
+            margin-top: var(--spacing-sm);
+            font-size: var(--font-size-xs);
             color: var(--text-secondary);
         }
         
@@ -451,8 +450,8 @@
         }
         
         .status-indicator {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: var(--success-color);
         }
@@ -462,24 +461,24 @@
         }
         .work-hours-config { 
             display: flex; 
-            gap: var(--spacing-sm); 
+            gap: var(--spacing-xs); 
             align-items: center; 
-            font-size: var(--font-size-sm); 
-            margin-top: var(--spacing-md);
+            font-size: var(--font-size-xs); 
+            margin-top: var(--spacing-xs);
             flex-wrap: wrap;
         }
         .work-hours-config select { 
-            padding: 8px 12px;
-            border-radius: 6px; 
+            padding: 3px 6px;
+            border-radius: 3px; 
             border: 1px solid var(--border-color); 
             background-color: var(--bg-color); 
             color: var(--text-color);
-            font-size: var(--font-size-sm);
-            min-height: 44px;
+            font-size: var(--font-size-xs);
+            min-height: 32px;
             cursor: pointer;
         }
         .local-time-card { 
-            border: 2px solid var(--primary-color);
+            border: 1px solid var(--primary-color);
             position: relative;
         }
         
@@ -496,8 +495,8 @@
         }
         @media (max-width: 767px) {
             body { 
-                padding: var(--spacing-md);
-                padding-bottom: 120px; 
+                padding: var(--spacing-sm);
+                padding-bottom: 100px; 
             }
             
             .container {
@@ -505,18 +504,18 @@
             }
             
             header {
-                margin-bottom: var(--spacing-lg);
+                margin-bottom: var(--spacing-md);
             }
             
             header h1 {
-                font-size: var(--font-size-3xl);
+                font-size: var(--font-size-xl);
             }
             
             .controls {
                 flex-direction: column;
-                gap: var(--spacing-md);
-                padding: var(--spacing-md);
-                border-radius: 12px;
+                gap: var(--spacing-sm);
+                padding: var(--spacing-sm);
+                border-radius: 8px;
             }
             
             .control-group {
@@ -524,17 +523,13 @@
                 justify-content: space-between;
             }
             
-            .master-slider-container {
-                width: 100%;
-            }
-            
             .zone-card {
-                padding: var(--spacing-lg);
-                border-radius: 12px;
+                padding: var(--spacing-md);
+                border-radius: 8px;
             }
             
             .time-display .time {
-                font-size: var(--font-size-3xl);
+                font-size: var(--font-size-xl);
             }
             
             .local-time-card {
@@ -544,10 +539,10 @@
                 right: 0; 
                 z-index: 100;
                 margin: 0; 
-                border-radius: 16px 16px 0 0; 
-                padding: var(--spacing-lg);
+                border-radius: 12px 12px 0 0; 
+                padding: var(--spacing-md);
                 border: none;
-                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
                 background: var(--card-bg-color);
             }
             
@@ -559,20 +554,25 @@
             }
             
             .local-time-card .time { 
-                font-size: var(--font-size-2xl); 
+                font-size: var(--font-size-lg); 
                 font-weight: var(--font-weight-semibold);
             }
             
             .local-time-card .date { 
-                font-size: var(--font-size-sm); 
+                font-size: var(--font-size-xs); 
+            }
+            
+            .timezone-offset {
+                padding: var(--spacing-lg);
+                margin: var(--spacing-lg) 0;
             }
         }
         .footer {
             text-align: center; 
             font-size: var(--font-size-xs); 
             color: var(--text-secondary);
-            margin-top: var(--spacing-2xl); 
-            padding: var(--spacing-lg) 0; 
+            margin-top: var(--spacing-lg); 
+            padding: var(--spacing-sm) 0; 
             border-top: 1px solid var(--border-color);
         }
         
@@ -699,12 +699,13 @@
         
         .timezone-offset {
             background: var(--card-bg-color);
-            border-radius: 16px;
-            padding: var(--spacing-2xl);
+            border-radius: 12px;
+            padding: var(--spacing-lg);
             text-align: center;
             box-shadow: var(--shadow-md);
             border: 1px solid var(--border-color);
-            margin: var(--spacing-xl) 0;
+            margin: var(--spacing-lg) 0;
+            transition: all 0.3s ease;
         }
         
         .offset-display {
@@ -721,46 +722,46 @@
             line-height: 1;
             display: flex;
             align-items: baseline;
-            gap: var(--spacing-sm);
+            gap: var(--spacing-xs);
+            transition: all 0.3s ease;
+        }
+        
+        .offset-value.positive {
+            color: var(--success-color);
+        }
+        
+        .offset-value.negative {
+            color: var(--error-color);
         }
         
         .offset-unit {
-            font-size: var(--font-size-xl);
+            font-size: var(--font-size-lg);
             font-weight: var(--font-weight-normal);
             color: var(--text-secondary);
         }
         
         .offset-description {
-            font-size: var(--font-size-base);
-            color: var(--text-secondary);
-            margin: 0;
-        }
-        
-        .offset-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: var(--spacing-md);
-            margin-top: var(--spacing-xl);
-        }
-        
-        .offset-detail {
-            background: var(--bg-color);
-            border-radius: 8px;
-            padding: var(--spacing-md);
-            border: 1px solid var(--border-color);
-        }
-        
-        .offset-detail-label {
             font-size: var(--font-size-sm);
             color: var(--text-secondary);
-            margin: 0 0 var(--spacing-xs) 0;
+            margin: 0;
         }
         
-        .offset-detail-value {
-            font-size: var(--font-size-lg);
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-color);
-            margin: 0;
+        .offset-context {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+            max-width: 80%;
+        }
+        
+        
+        @keyframes highlight {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .offset-value.changed {
+            animation: highlight 0.5s ease;
         }
         
         .search-info {
@@ -903,8 +904,18 @@ defer
 <body>
     <div class="container">
         <header>
-            <h1>ZoneMatch</h1>
-            <p>Because remote work is hard enough already.</p>
+            <div class="header-content">
+                <div class="header-title-section">
+                    <h1>ZoneMatch</h1>
+                    <p>Because remote work is hard enough already.</p>
+                </div>
+                <div class="local-time-header" id="local-time-header">
+                    <div class="local-time-display" id="local-time-display">
+                        <div class="time"></div>
+                        <div class="date"></div>
+                    </div>
+                </div>
+            </div>
         </header>
         
         <section class="content-section">
@@ -915,13 +926,13 @@ defer
                 <div class="controls-grid">
                     <div class="control-card">
                         <label for="theme-toggle" class="control-label">Theme</label>
-                        <p class="control-description">Switch between light and dark mode</p>
+                        <p class="control-description">Light/Dark mode</p>
                         <button id="theme-toggle" aria-label="Toggle theme">🌓</button>
                     </div>
                     
                     <div class="control-card">
                         <label for="sync-toggle" class="control-label">Real Time Sync</label>
-                        <p class="control-description">Follow current time automatically</p>
+                        <p class="control-description">Auto follow time</p>
                         <div class="control-group">
                             <input type="checkbox" id="sync-toggle" aria-label="Enable real time sync">
                             <span>⏱️</span>
@@ -930,7 +941,7 @@ defer
                     
                     <div class="control-card">
                         <label for="format-toggle" class="control-label">Time Format</label>
-                        <p class="control-description">Use 24-hour time format</p>
+                        <p class="control-description">24-hour format</p>
                         <div class="control-group">
                             <input type="checkbox" id="format-toggle" aria-label="Enable 24-hour format">
                             <span>24-Hour</span>
@@ -940,17 +951,10 @@ defer
                     <div class="control-card">
                         <label class="control-label">Quick Actions</label>
                         <p class="control-description">Swap timezones</p>
-                        <button id="swap-button" aria-label="Swap timezones">Swap Timezones</button>
+                        <button id="swap-button" aria-label="Swap timezones">Swap</button>
                     </div>
                 </div>
                 
-                <div class="control-card" style="margin-top: var(--spacing-md);">
-                    <label for="master-slider" class="control-label">Time Control</label>
-                    <p class="control-description">Manually adjust time to check availability</p>
-                    <div class="master-slider-container">
-                        <input type="range" id="master-slider" min="0" max="1439" aria-label="Time slider">
-                    </div>
-                </div>
             </div>
         </section>
         
@@ -961,19 +965,6 @@ defer
             </div>
             
             <div class="zone-grid">
-                <div class="zone-card local-time-card">
-                    <div class="zone-header">
-                        <h3 class="zone-title">
-                            Local Time
-                            <span class="zone-badge" id="local-status">Active</span>
-                        </h3>
-                    </div>
-                    <div class="time-display" id="local-time-display">
-                        <div class="time"></div>
-                        <div class="date"></div>
-                    </div>
-                </div>
-                
                 <div class="zone-card" id="zone1-card">
                     <div class="zone-header">
                         <h3 class="zone-title">
@@ -1006,10 +997,7 @@ defer
                 <div class="offset-display">
                     <div class="offset-value" id="offset-value">+0</div>
                     <div class="offset-description" id="offset-description">Hours between timezones</div>
-                </div>
-                
-                <div class="offset-details" id="offset-details">
-                    <!-- Details will be inserted here -->
+                    <div class="offset-context" id="offset-context">Select different timezones to see the time difference</div>
                 </div>
             </div>
         </section>
@@ -1025,7 +1013,6 @@ defer
             localTime: { time: document.querySelector('#local-time-display .time'), date: document.querySelector('#local-time-display .date') },
             zone1Card: document.getElementById('zone1-card'),
             zone2Card: document.getElementById('zone2-card'),
-            slider: document.getElementById('master-slider'),
             formatToggle: document.getElementById('format-toggle'),
             syncToggle: document.getElementById('sync-toggle'),
             swapButton: document.getElementById('swap-button'),
@@ -1040,7 +1027,6 @@ defer
                 { id: 2, tz: 'Europe/London', workStart: 9, workEnd: 17 }
             ],
             use24HourFormat: false, 
-            sliderMinutes: 0, 
             isSyncing: true,
             lastManualEdit: null
         };
@@ -1474,21 +1460,55 @@ defer
                 console.error('Error calculating timezone offset:', error);
                 dom.offsetValue.textContent = 'Error';
                 dom.offsetDescription.textContent = 'Unable to calculate offset';
-                clearOffsetDetails();
             }
         }
+        
+        // Previous value for animation
+        let previousOffsetDifference = 0;
         
         // Enhanced offset display with detailed information
         function updateOffsetDisplay(zone1, zone2, offsetDifference) {
             // Update main offset display
             const offsetValue = document.getElementById('offset-value');
             const offsetDescription = document.getElementById('offset-description');
+            const offsetContext = document.getElementById('offset-context');
             
+            // Add animation class for value changes
+            if (previousOffsetDifference !== offsetDifference) {
+                offsetValue.classList.remove('changed');
+                void offsetValue.offsetWidth; // Trigger reflow
+                offsetValue.classList.add('changed');
+                previousOffsetDifference = offsetDifference;
+            }
+            
+            // Set the offset value with color coding
             offsetValue.textContent = formatOffset(offsetDifference);
+            offsetValue.className = 'offset-value'; // Reset classes
+            if (offsetDifference > 0) {
+                offsetValue.classList.add('positive');
+            } else if (offsetDifference < 0) {
+                offsetValue.classList.add('negative');
+            }
+            
+            // Update description
             offsetDescription.textContent = `Hours from ${zone1.city || zone1.tz} to ${zone2.city || zone2.tz}`;
             
-            // Update detailed offset information
-            updateOffsetDetails(zone1, zone2, offsetDifference);
+            // Update context with practical information
+            const hours = Math.floor(Math.abs(offsetDifference));
+            const minutes = Math.round((Math.abs(offsetDifference) - hours) * 60);
+            const direction = offsetDifference > 0 ? 'ahead' : offsetDifference < 0 ? 'behind' : 'same time';
+            
+            // Determine if it's the same day or different days
+            const now = new Date();
+            const zone1Date = new Date(now.toLocaleString('en-US', { timeZone: zone1.tz }));
+            const zone2Date = new Date(now.toLocaleString('en-US', { timeZone: zone2.tz }));
+            
+            const dayDifference = Math.abs(zone1Date.getDate() - zone2Date.getDate());
+            const sameDay = dayDifference === 0 ? 'same day' : 
+                          dayDifference === 1 ? 'next day' : 
+                          `${dayDifference} days apart`;
+            
+            offsetContext.textContent = `${zone2.city || zone2.tz} is ${hours} hour${hours !== 1 ? 's' : ''}${minutes > 0 ? ` and ${minutes} minute${minutes !== 1 ? 's' : ''}` : ''} ${direction} | ${sameDay}`;
         }
         
         // Format offset with proper handling of fractional hours
@@ -1501,55 +1521,6 @@ defer
                 return `${sign}${hours}`;
             } else {
                 return `${sign}${hours}:${minutes.toString().padStart(2, '0')}`;
-            }
-        }
-        
-        // Update detailed offset information
-        function updateOffsetDetails(zone1, zone2, offsetDifference) {
-            const detailsContainer = document.getElementById('offset-details');
-            
-            // Clear existing details
-            detailsContainer.innerHTML = '';
-            
-            // Add zone details
-            const zone1Detail = createOffsetDetail('Zone 1', zone1.city || zone1.tz, zone1.tz, zone1.workStart, zone1.workEnd);
-            const zone2Detail = createOffsetDetail('Zone 2', zone2.city || zone2.tz, zone2.tz, zone2.workStart, zone2.workEnd);
-            const differenceDetail = createOffsetDetail('Time Difference', formatOffset(offsetDifference), '', '', '');
-            
-            detailsContainer.appendChild(zone1Detail);
-            detailsContainer.appendChild(zone2Detail);
-            detailsContainer.appendChild(differenceDetail);
-        }
-        
-        // Create individual offset detail card
-        function createOffsetDetail(label, city, timezone, workStart, workEnd) {
-            const detail = document.createElement('div');
-            detail.className = 'offset-detail';
-            
-            const labelEl = document.createElement('div');
-            labelEl.className = 'offset-detail-label';
-            labelEl.textContent = label;
-            
-            const valueEl = document.createElement('div');
-            valueEl.className = 'offset-detail-value';
-            
-            if (workStart !== undefined && workEnd !== undefined) {
-                valueEl.textContent = `${city}\n${workStart}:00 - ${workEnd}:00`;
-            } else {
-                valueEl.textContent = city;
-            }
-            
-            detail.appendChild(labelEl);
-            detail.appendChild(valueEl);
-            
-            return detail;
-        }
-        
-        // Clear offset details
-        function clearOffsetDetails() {
-            const detailsContainer = document.getElementById('offset-details');
-            if (detailsContainer) {
-                detailsContainer.innerHTML = '';
             }
         }
 
@@ -1607,10 +1578,8 @@ defer
 
         function updateAllVisuals() {
             const now = new Date();
-            const todayAtMidnightUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-            const sliderTime = new Date(todayAtMidnightUTC.getTime() + state.sliderMinutes * 60 * 1000);
             
-            state.zones.forEach(zone => updateZone(zone, sliderTime));
+            state.zones.forEach(zone => updateZone(zone, now));
             updateOverlapVisuals();
             updateTimezoneOffset(); // Update the timezone offset display
         }
@@ -1701,11 +1670,6 @@ defer
             dom.localTime.time.textContent = formatTime(now, state.use24HourFormat);
             dom.localTime.date.textContent = formatDate(now);
             if (state.isSyncing) {
-                const utcMinutes = (now.getUTCHours() * 60 + now.getUTCMinutes());
-                state.sliderMinutes = utcMinutes;
-                isProgrammaticUpdate = true;
-                dom.slider.value = state.sliderMinutes;
-                isProgrammaticUpdate = false;
                 updateAllVisuals();
             }
         }
@@ -1714,13 +1678,6 @@ defer
             if (isProgrammaticUpdate) return;
             stopRealtimeSync();
             state.lastManualEdit = zone.id;
-            const [hours, minutes] = newTime.split(':').map(Number);
-            const now = new Date();
-            const offset = getTimezoneOffsetForDate(zone.tz, now);
-            state.sliderMinutes = ((hours - offset) * 60 + minutes + 1440) % 1440;
-            isProgrammaticUpdate = true;
-            dom.slider.value = state.sliderMinutes;
-            isProgrammaticUpdate = false;
             updateAllVisuals();
         }
 
@@ -1801,14 +1758,6 @@ defer
             // Initialize all visual components immediately
             updateAllVisuals();
 
-            dom.slider.addEventListener('input', () => {
-                if(isProgrammaticUpdate) return;
-                state.sliderMinutes = parseInt(dom.slider.value, 10);
-                stopRealtimeSync();
-                state.lastManualEdit = null;
-                updateAllVisuals();
-            });
-            
             dom.formatToggle.addEventListener('change', (e) => { 
                 state.use24HourFormat = e.target.checked; 
                 updateAllVisuals(); 
@@ -1829,7 +1778,7 @@ defer
                     });
                 } else {
                     stopRealtimeSync();
-                    showEnhancedNotification('Manual time control enabled', {
+                    showEnhancedNotification('Real time sync disabled', {
                         type: 'info',
                         duration: 3000
                     });
