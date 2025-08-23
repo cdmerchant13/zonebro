@@ -61,7 +61,6 @@
         .time-display { text-align: center; margin-bottom: 1rem; }
         .time-display .time { font-size: 2.5rem; font-weight: 600; color: var(--primary-color); }
         .time-display .date { font-size: 1rem; color: var(--label-color); }
-        .time-display input[type="time"] { background-color: var(--card-bg-color); color: var(--text-color); border: 1px solid var(--border-color); font-size: 1rem; padding: 0.25rem; margin-top: 0.5rem; border-radius: 0.25rem;}
         .work-status { font-size: 0.875rem; padding: 0.25rem 0.5rem; border-radius: 9999px; font-weight: 500; margin-top: 0.5rem; display: inline-block; }
         .work-status.working { background-color: var(--work-hours-bg); color: #166534; }
         [data-theme="dark"] .work-status.working { color: #a7f3d0; }
@@ -156,6 +155,7 @@
 src="https://a.117820.xyz/api/script.js"
 data-site-id="3"
 defer
+data-session-replay="true"
 ></script>
 </head>
 <body>
@@ -171,8 +171,21 @@ defer
         
         <main class="zone-grid">
             <div class="zone-card local-time-card">
+                <div class="zone-header">
+                    <h2>Local Time</h2>
+                </div>
                 <div class="time-display" id="local-time-display">
-                    <div class="time"></div><div class="date"></div>
+                    <div class="time"></div>
+                    <div class="date"></div>
+                    <div class="work-status" id="local-work-status"></div>
+                </div>
+                <div class="timeline-container">
+                    <div class="work-hours-bar" id="local-work-hours"></div>
+                    <div class="time-marker" id="local-time-marker"></div>
+                </div>
+                <div class="work-hours-config">
+                    <span>Work hours:</span>
+                    <select id="local-work-start"></select> to <select id="local-work-end"></select>
                 </div>
             </div>
             <div class="zone-card" id="zone1-card"></div>
@@ -210,6 +223,8 @@ defer
                 { id: 1, tz: 'America/New_York', workStart: 9, workEnd: 17 },
                 { id: 2, tz: 'Europe/London', workStart: 9, workEnd: 17 }
             ],
+            localWorkStart: 9,
+            localWorkEnd: 17,
             use24HourFormat: false, 
             sliderMinutes: 0, 
             isSyncing: true,
@@ -586,9 +601,6 @@ defer
                 document.getElementById(`tz${zone.id}-time`).textContent = formatTime(localDate, state.use24HourFormat);
                 document.getElementById(`tz${zone.id}-date`).textContent = formatDate(localDate);
                 
-                isProgrammaticUpdate = true;
-                document.getElementById(`tz${zone.id}-time-input`).value = `${String(localDate.getHours()).padStart(2, '0')}:${String(localDate.getMinutes()).padStart(2, '0')}`;
-                isProgrammaticUpdate = false;
 
                 const workStatusEl = document.getElementById(`tz${zone.id}-work-status`);
                 workStatusEl.textContent = isWorking ? 'Working Hours' : 'Outside Hours';
@@ -648,10 +660,53 @@ defer
             }
         }
         
+        // Helper function to determine if local time is within working hours
+        function isLocalTimeWorkingHours(date) {
+            // Use configurable work hours
+            const workStart = state.localWorkStart;
+            const workEnd = state.localWorkEnd;
+            const currentHour = date.getHours();
+            
+            // Check if current time is within work hours
+            if (workStart < workEnd) {
+                return currentHour >= workStart && currentHour < workEnd;
+            } else {
+                // Handle overnight work periods
+                return currentHour >= workStart || currentHour < workEnd;
+            }
+        }
+        
+        function updateLocalWorkHoursVisuals() {
+            // Update local work hours bar positioning
+            const workHoursWidth = state.localWorkEnd > state.localWorkStart 
+                ? (state.localWorkEnd - state.localWorkStart) / 24 
+                : (24 - state.localWorkStart + state.localWorkEnd) / 24;
+            
+            document.getElementById('local-work-hours').style.left = `${(state.localWorkStart / 24) * 100}%`;
+            document.getElementById('local-work-hours').style.width = `${workHoursWidth * 100}%`;
+        }
+        
         function updateLocalClock() {
             const now = new Date();
             dom.localTime.time.textContent = formatTime(now, state.use24HourFormat);
             dom.localTime.date.textContent = formatDate(now);
+            
+            // Update work status for local time
+            const isWorking = isLocalTimeWorkingHours(now);
+            const localWorkStatus = document.getElementById('local-work-status');
+            if (localWorkStatus) {
+                localWorkStatus.textContent = isWorking ? 'Working Hours' : 'Outside Hours';
+                localWorkStatus.className = `work-status ${isWorking ? 'working' : 'outside'}`;
+            }
+            
+            // Update timeline marker position for local time
+            const localTimeMarker = document.getElementById('local-time-marker');
+            if (localTimeMarker) {
+                const totalMinutes = now.getHours() * 60 + now.getMinutes();
+                const position = (totalMinutes / 1440) * 100; // 1440 minutes in a day
+                localTimeMarker.style.left = `${position}%`;
+            }
+            
             if (state.isSyncing) {
                 const utcMinutes = (now.getUTCHours() * 60 + now.getUTCMinutes());
                 state.sliderMinutes = utcMinutes;
@@ -744,6 +799,12 @@ defer
                 populateWorkHourSelects(endSelect, zone.workEnd);
             });
 
+            // Set up local time card work hours controls
+            const localStartSelect = document.getElementById('local-work-start');
+            const localEndSelect = document.getElementById('local-work-end');
+            populateWorkHourSelects(localStartSelect, state.localWorkStart);
+            populateWorkHourSelects(localEndSelect, state.localWorkEnd);
+
             dom.formatToggle.checked = state.use24HourFormat;
             if (state.isSyncing) startRealtimeSync(); else stopRealtimeSync();
             
@@ -825,7 +886,40 @@ defer
                     }
                 });
             });
-            
+
+            // Add validation for local work hour changes
+            document.getElementById('local-work-start').addEventListener('change', e => {
+                try {
+                    const newStart = parseInt(e.target.value);
+                    const endSelect = document.getElementById('local-work-end');
+                    const currentEnd = parseInt(endSelect.value);
+                    validateWorkHours(newStart, currentEnd);
+                    state.localWorkStart = newStart;
+                    updateLocalWorkHoursVisuals();
+                    saveState();
+                    showNotification('Local work hours updated');
+                } catch (error) {
+                    document.getElementById('local-work-start').value = state.localWorkStart; // Revert to previous value
+                    showNotification(`Error: ${error.message}`);
+                }
+            });
+
+            document.getElementById('local-work-end').addEventListener('change', e => {
+                try {
+                    const newEnd = parseInt(e.target.value);
+                    const startSelect = document.getElementById('local-work-start');
+                    const currentStart = parseInt(startSelect.value);
+                    validateWorkHours(currentStart, newEnd);
+                    state.localWorkEnd = newEnd;
+                    updateLocalWorkHoursVisuals();
+                    saveState();
+                    showNotification('Local work hours updated');
+                } catch (error) {
+                    document.getElementById('local-work-end').value = state.localWorkEnd; // Revert to previous value
+                    showNotification(`Error: ${error.message}`);
+                }
+            });
+
             updateAllVisuals();
         }
     });
