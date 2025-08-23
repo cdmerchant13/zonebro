@@ -61,7 +61,6 @@
         .time-display { text-align: center; margin-bottom: 1rem; }
         .time-display .time { font-size: 2.5rem; font-weight: 600; color: var(--primary-color); }
         .time-display .date { font-size: 1rem; color: var(--label-color); }
-        .time-display input[type="time"] { background-color: var(--card-bg-color); color: var(--text-color); border: 1px solid var(--border-color); font-size: 1rem; padding: 0.25rem; margin-top: 0.5rem; border-radius: 0.25rem;}
         .work-status { font-size: 0.875rem; padding: 0.25rem 0.5rem; border-radius: 9999px; font-weight: 500; margin-top: 0.5rem; display: inline-block; }
         .work-status.working { background-color: var(--work-hours-bg); color: #166534; }
         [data-theme="dark"] .work-status.working { color: #a7f3d0; }
@@ -178,7 +177,6 @@ data-session-replay="true"
                 <div class="time-display" id="local-time-display">
                     <div class="time"></div>
                     <div class="date"></div>
-                    <input type="time" id="local-time-input">
                     <div class="work-status" id="local-work-status"></div>
                 </div>
                 <div class="timeline-container">
@@ -603,9 +601,6 @@ data-session-replay="true"
                 document.getElementById(`tz${zone.id}-time`).textContent = formatTime(localDate, state.use24HourFormat);
                 document.getElementById(`tz${zone.id}-date`).textContent = formatDate(localDate);
                 
-                isProgrammaticUpdate = true;
-                document.getElementById(`tz${zone.id}-time-input`).value = `${String(localDate.getHours()).padStart(2, '0')}:${String(localDate.getMinutes()).padStart(2, '0')}`;
-                isProgrammaticUpdate = false;
 
                 const workStatusEl = document.getElementById(`tz${zone.id}-work-status`);
                 workStatusEl.textContent = isWorking ? 'Working Hours' : 'Outside Hours';
@@ -679,6 +674,16 @@ data-session-replay="true"
                 // Handle overnight work periods
                 return currentHour >= workStart || currentHour < workEnd;
             }
+        }
+        
+        function updateLocalWorkHoursVisuals() {
+            // Update local work hours bar positioning
+            const workHoursWidth = state.localWorkEnd > state.localWorkStart 
+                ? (state.localWorkEnd - state.localWorkStart) / 24 
+                : (24 - state.localWorkStart + state.localWorkEnd) / 24;
+            
+            document.getElementById('local-work-hours').style.left = `${(state.localWorkStart / 24) * 100}%`;
+            document.getElementById('local-work-hours').style.width = `${workHoursWidth * 100}%`;
         }
         
         function updateLocalClock() {
@@ -915,20 +920,6 @@ data-session-replay="true"
                 }
             });
 
-            // Add event listener for local time input
-            document.getElementById('local-time-input').addEventListener('change', e => {
-                if (isProgrammaticUpdate) return;
-                stopRealtimeSync();
-                const [hours, minutes] = e.target.value.split(':').map(Number);
-                const now = new Date();
-                // For local time, we don't need to adjust for timezone offset
-                state.sliderMinutes = (hours * 60 + minutes + 1440) % 1440;
-                isProgrammaticUpdate = true;
-                dom.slider.value = state.sliderMinutes;
-                isProgrammaticUpdate = false;
-                updateAllVisuals();
-            });
-            
             updateAllVisuals();
         }
     });
