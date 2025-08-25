@@ -165,7 +165,6 @@ data-session-replay="true"
             <div class="control-group"><button id="theme-toggle">🌓</button></div>
             <div class="control-group"><label for="sync-toggle">⏱️ Follow Real Time</label><input type="checkbox" id="sync-toggle"></div>
             <div class="control-group"><label for="format-toggle">24-Hour</label><input type="checkbox" id="format-toggle"></div>
-            <button id="swap-button">Swap</button>
             <div class="master-slider-container"><input type="range" id="master-slider" min="0" max="1439"></div>
         </div>
         
@@ -212,7 +211,9 @@ data-session-replay="true"
             slider: document.getElementById('master-slider'),
             formatToggle: document.getElementById('format-toggle'),
             syncToggle: document.getElementById('sync-toggle'),
+            /*
             swapButton: document.getElementById('swap-button'),
+            */
             notification: document.getElementById('notification'),
             offsetValue: document.getElementById('offset-value'),
             offsetDescription: document.getElementById('offset-description')
@@ -837,12 +838,25 @@ data-session-replay="true"
                 }
             });
             
+            /*
+             * SWAP FUNCTIONALITY - REMOVED 2025-08-23
+             * 
+             * Reason: Temporarily disabled swap button functionality
+             * 
+             * To re-enable:
+             * 1. Uncomment the swapButton DOM reference above
+             * 2. Uncomment this event listener
+             * 3. Add the swap button HTML element back to the controls section
+             *    <button id="swap-button">Swap</button>
+             */
+            /*
             dom.swapButton.addEventListener('click', () => {
                 [state.zones[0], state.zones[1]] = [state.zones[1], state.zones[0]];
                 [state.zones[0].id, state.zones[1].id] = [1, 2];
                 init();
                 showNotification('Timezones swapped');
             });
+            */
 
             state.zones.forEach(zone => {
                 document.getElementById(`tz${zone.id}-time-input`).addEventListener('change', e => handleManualTimeChange(zone, e.target.value));
@@ -926,6 +940,6 @@ data-session-replay="true"
     </script>
 </body>
 <footer class="footer">
-  <p>© 2025 ZoneMatch. Built for timezone sanity. <a href="https://061191.xyz">🌍</a></p>
+  <p>© 2025 ZoneMatch. Built for timezone sanity. <a href="https://061191.xyz/?utm_source=zonematch">🌍</a></p>
 </footer>
 </html>
